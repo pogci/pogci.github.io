@@ -137,3 +137,22 @@ renderEvents();
 renderNotes();
 renderSports();
 renderPlants();
+
+
+function requestNotification() {
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+}
+
+function remindPlants() {
+  if (Notification.permission === "granted") {
+    new Notification("🌱 Arrose les plantes !");
+  }
+}
+
+// Demande permission
+requestNotification();
+
+// Rappel toutes les semaines (simulation: 10s pour tester)
+setInterval(remindPlants, 10000);
