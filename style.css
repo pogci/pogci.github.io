@@ -29,10 +29,6 @@ nav button {
   cursor: pointer;
 }
 
-nav button:hover {
-  transform: scale(1.05);
-}
-
 .page {
   padding: 20px;
   max-width: 800px;
@@ -52,10 +48,6 @@ input, textarea {
   border: none;
 }
 
-button {
-  cursor: pointer;
-}
-
 ul {
   list-style: none;
   padding: 0;
@@ -73,16 +65,12 @@ li {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
-  margin-top: 15px;
 }
 
 .day {
   background: white;
   border-radius: 10px;
   padding: 8px;
-  min-height: 80px;
-}
-
-.hidden {
-  display: none !important;
+  min-height: 90px;
+  font-size: 12px;
 }
