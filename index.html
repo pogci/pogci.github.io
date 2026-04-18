@@ -15,7 +15,7 @@
 </header>
 
 <!-- LOGIN -->
-<div id="loginPage">
+<div id="loginPage" class="card">
   <h2>🔐 Connexion</h2>
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Mot de passe">
@@ -33,7 +33,7 @@
 </nav>
 
 <!-- COURSES -->
-<section id="courses" class="page">
+<section id="courses" class="page" style="display:block;">
   <h2>🛒 Courses</h2>
   <input id="courseInput">
   <button onclick="addCourse()">Ajouter</button>
@@ -41,7 +41,7 @@
 </section>
 
 <!-- AGENDA -->
-<section id="agenda" class="page hidden">
+<section id="agenda" class="page" style="display:none;">
   <h2>📅 Agenda</h2>
 
   <button onclick="prevMonth()">⬅</button>
@@ -52,13 +52,13 @@
 </section>
 
 <!-- PLANTES -->
-<section id="plantes" class="page hidden">
+<section id="plantes" class="page" style="display:none;">
   <h2>🌱 Plantes</h2>
   <ul id="plantList"></ul>
 </section>
 
 <!-- NOTES -->
-<section id="notes" class="page hidden">
+<section id="notes" class="page" style="display:none;">
   <h2>💌 Notes & Recos</h2>
   <textarea id="noteInput"></textarea>
   <button onclick="addNote()">Ajouter</button>
@@ -70,7 +70,7 @@
 </section>
 
 <!-- SPORT -->
-<section id="sport" class="page hidden">
+<section id="sport" class="page" style="display:none;">
   <h2>🧘‍♀️ Sport</h2>
   <input id="sportInput">
   <button onclick="addSport()">Ajouter</button>
