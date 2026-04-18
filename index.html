@@ -21,8 +21,17 @@
   <button onclick="showPage('sport')">Sport</button>
 </nav>
 
-<main>
 
+<div id="loginPage">
+  <h2>🔐 Connexion Coloc</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Mot de passe">
+  <button onclick="login()">Se connecter</button>
+</div>
+  
+<main id="app" style="display:none;">
+
+  
 <!-- COURSES -->
 <section id="courses" class="page">
   <h2>🛒 Courses</h2>
