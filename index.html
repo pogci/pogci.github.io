@@ -34,9 +34,14 @@
 <!-- AGENDA -->
 <section id="agenda" class="page hidden">
   <h2>📅 Agenda</h2>
-  <input id="eventInput" placeholder="Event + date (ex: Yoga 12/04)">
-  <button onclick="addEvent()">Ajouter</button>
-  <ul id="eventList"></ul>
+
+  <div>
+    <button onclick="prevMonth()">⬅</button>
+    <span id="monthLabel"></span>
+    <button onclick="nextMonth()">➡</button>
+  </div>
+
+  <div id="calendar"></div>
 </section>
 
 <!-- PLANTES -->
@@ -51,8 +56,9 @@
   <textarea id="noteInput" placeholder="Laisser un mot, musique, idée..."></textarea>
   <button onclick="addNote()">Ajouter</button>
   <ul id="noteList"></ul>
-  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6" width="100%" height="152"></iframe>
-</section>
+<iframe style="border-radius:12px"
+src="https://open.spotify.com/embed/playlist/3gUptoFUZW0YxoBciSe41R"
+width="100%" height="152"></iframe></section>
 
 <!-- SPORT -->
 <section id="sport" class="page hidden">
