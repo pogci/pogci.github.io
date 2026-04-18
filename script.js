@@ -2,7 +2,6 @@ function showPage(id) {
   document.querySelectorAll(".page").forEach(p => {
     p.style.display = "none";
   });
-
   document.getElementById(id).style.display = "block";
 }
 
@@ -31,7 +30,7 @@ auth.onAuthStateChanged(user => {
 });
 
 /* =======================
-   COURSES (FIREBASE)
+   COURSES
 ======================= */
 
 function addCourse() {
@@ -43,13 +42,12 @@ function addCourse() {
 }
 
 db.collection("courses").orderBy("created")
-.onSnapshot(snapshot => {
+.onSnapshot(snap => {
   let list = document.getElementById("courseList");
   list.innerHTML = "";
-
-  snapshot.forEach(doc => {
-    let d = doc.data();
-    list.innerHTML += `<li><strong>${d.user}</strong> : ${d.text}</li>`;
+  snap.forEach(d => {
+    let x = d.data();
+    list.innerHTML += `<li><strong>${x.user}</strong> : ${x.text}</li>`;
   });
 });
 
@@ -77,7 +75,7 @@ function addSport() {
 }
 
 /* =======================
-   PLANTES
+   PLANTES (local simple)
 ======================= */
 
 const plantes = ["Barbara","Calypso","Aretha","Tina","Adèle"];
@@ -86,15 +84,12 @@ function renderPlants() {
   let list = document.getElementById("plantList");
   list.innerHTML = "";
 
-  plantes.forEach(name => {
+  plantes.forEach(p => {
     let li = document.createElement("li");
-
     let cb = document.createElement("input");
     cb.type = "checkbox";
-
     li.appendChild(cb);
-    li.append(" " + name);
-
+    li.append(" " + p);
     list.appendChild(li);
   });
 }
@@ -102,7 +97,7 @@ function renderPlants() {
 renderPlants();
 
 /* =======================
-   CALENDRIER SIMPLE
+   CALENDRIER COLLABORATIF (BASE)
 ======================= */
 
 let currentDate = new Date();
@@ -112,20 +107,51 @@ function renderCalendar() {
   cal.innerHTML = "";
 
   document.getElementById("monthLabel").textContent =
-    currentDate.toLocaleString("fr-FR", { month:"long", year:"numeric" });
+    currentDate.toLocaleString("fr-FR",{month:"long",year:"numeric"});
 
   let year = currentDate.getFullYear();
   let month = currentDate.getMonth();
   let days = new Date(year, month+1, 0).getDate();
 
   for (let i=1;i<=days;i++){
+    const key = `${year}-${month+1}-${i}`;
+
     cal.innerHTML += `
       <div class="day">
         <strong>${i}</strong>
-        <textarea></textarea>
+        <input placeholder="event"
+          onkeydown="addEvent(event,'${key}')">
+        <div id="ev-${key}"></div>
       </div>
     `;
+
+    listenEvents(key);
   }
+}
+
+function addEvent(e,key){
+  if(e.key==="Enter"){
+    db.collection("calendar").doc(key).collection("events").add({
+      text:e.target.value,
+      user:auth.currentUser.email,
+      created:Date.now()
+    });
+    e.target.value="";
+  }
+}
+
+function listenEvents(key){
+  let container=document.getElementById("ev-"+key);
+
+  db.collection("calendar").doc(key).collection("events")
+  .orderBy("created")
+  .onSnapshot(snap=>{
+    container.innerHTML="";
+    snap.forEach(d=>{
+      let x=d.data();
+      container.innerHTML+=`<div>${x.user}: ${x.text}</div>`;
+    });
+  });
 }
 
 function nextMonth(){
