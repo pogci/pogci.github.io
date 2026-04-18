@@ -1,61 +1,88 @@
 body {
-  font-family: 'Helvetica Neue', sans-serif;
-  background: linear-gradient(120deg, #fdfbfb, #ebedee);
-  color: #222;
   margin: 0;
+  font-family: 'Helvetica Neue', sans-serif;
+  background: radial-gradient(circle at top, #ffe0ec, #e0f7fa);
+  color: #222;
 }
 
 header {
   text-align: center;
-  padding: 30px;
-  background: #ffe4ec;
-  font-size: 20px;
+  padding: 40px;
+  font-size: 24px;
+  letter-spacing: 2px;
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(10px);
 }
 
 nav {
-  text-align: center;
-  padding: 10px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 nav button {
+  margin: 8px;
+  padding: 12px 18px;
+  border-radius: 30px;
   border: none;
-  margin: 5px;
-  padding: 10px 15px;
-  border-radius: 20px;
-  background: #d8f3dc;
+  background: linear-gradient(45deg, #ffafcc, #cdb4db);
+  color: white;
   cursor: pointer;
   transition: 0.3s;
 }
 
 nav button:hover {
-  background: #b7e4c7;
+  transform: scale(1.1);
 }
 
 .page {
   padding: 20px;
-  max-width: 600px;
+  max-width: 900px;
   margin: auto;
+  animation: fadeIn 0.5s ease;
 }
 
-.hidden {
-  display: none;
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(10px);}
+  to {opacity:1;}
+}
+
+.card {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
 input, textarea {
   width: 80%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 15px;
+  border: none;
+  margin: 10px;
 }
 
 button {
-  margin-top: 10px;
+  cursor: pointer;
 }
 
-li {
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.day {
   background: white;
-  margin: 10px 0;
-  padding: 10px;
   border-radius: 15px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+  padding: 10px;
+  min-height: 100px;
+}
+
+.day textarea {
+  width: 100%;
+  height: 60px;
 }
