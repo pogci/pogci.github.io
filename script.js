@@ -213,3 +213,24 @@ function prevMonth() {
 }
 
 renderCalendar();
+
+
+// Login
+function login() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("app").style.display = "block";
+    })
+    .catch(err => alert(err.message));
+}
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("app").style.display = "block";
+  }
+});
