@@ -214,6 +214,11 @@ function prevMonth() {
 
 renderCalendar();
 
+// FIREBASE
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+const auth = firebase.auth();
 
 // Login
 function login() {
@@ -234,3 +239,5 @@ auth.onAuthStateChanged(user => {
     document.getElementById("app").style.display = "block";
   }
 });
+
+
