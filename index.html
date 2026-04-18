@@ -42,11 +42,13 @@
 
 <!-- AGENDA -->
 <section id="agenda" class="page" style="display:none;">
-  <h2>📅 Agenda</h2>
+  <h2>📅 Agenda collaboratif</h2>
 
-  <button onclick="prevMonth()">⬅</button>
-  <span id="monthLabel"></span>
-  <button onclick="nextMonth()">➡</button>
+  <div>
+    <button onclick="prevMonth()">⬅</button>
+    <span id="monthLabel"></span>
+    <button onclick="nextMonth()">➡</button>
+  </div>
 
   <div id="calendar"></div>
 </section>
@@ -59,14 +61,15 @@
 
 <!-- NOTES -->
 <section id="notes" class="page" style="display:none;">
-  <h2>💌 Notes & Recos</h2>
+  <h2>💌 Notes</h2>
   <textarea id="noteInput"></textarea>
   <button onclick="addNote()">Ajouter</button>
   <ul id="noteList"></ul>
 
   <iframe style="border-radius:12px"
-  src="https://open.spotify.com/embed/playlist/3gUptoFUZW0YxoBciSe41R"
-  width="100%" height="152"></iframe>
+    src="https://open.spotify.com/embed/playlist/3gUptoFUZW0YxoBciSe41R"
+    width="100%" height="152">
+  </iframe>
 </section>
 
 <!-- SPORT -->
