@@ -1,10 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <title>Mon site</title>
+  <meta charset="UTF-8">
+  <title>Coloc Vibes ✨</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <h1>Hello 👋</h1>
-  <p>Ceci est mon premier site avec GitHub</p>
+
+<header>
+  <h1>🌿 Coloc Vibes</h1>
+  <p>Elodie & Cécilia</p>
+</header>
+
+<nav>
+  <button onclick="showPage('courses')">Courses</button>
+  <button onclick="showPage('agenda')">Agenda</button>
+  <button onclick="showPage('plantes')">Plantes</button>
+  <button onclick="showPage('notes')">Notes & Recos</button>
+  <button onclick="showPage('sport')">Sport</button>
+</nav>
+
+<main>
+
+<!-- COURSES -->
+<section id="courses" class="page">
+  <h2>🛒 Courses</h2>
+  <input id="courseInput" placeholder="Ajouter un item...">
+  <button onclick="addCourse()">Ajouter</button>
+  <ul id="courseList"></ul>
+</section>
+
+<!-- AGENDA -->
+<section id="agenda" class="page hidden">
+  <h2>📅 Agenda</h2>
+  <input id="eventInput" placeholder="Nouvel événement">
+  <button onclick="addEvent()">Ajouter</button>
+  <ul id="eventList"></ul>
+</section>
+
+<!-- PLANTES -->
+<section id="plantes" class="page hidden">
+  <h2>🌱 Plantes</h2>
+  <ul id="plantList"></ul>
+</section>
+
+<!-- NOTES -->
+<section id="notes" class="page hidden">
+  <h2>💌 Notes & Recos</h2>
+  <textarea id="noteInput" placeholder="Laisser un mot, musique, idée..."></textarea>
+  <button onclick="addNote()">Ajouter</button>
+  <ul id="noteList"></ul>
+</section>
+
+<!-- SPORT -->
+<section id="sport" class="page hidden">
+  <h2>🧘‍♀️ Sport & Yoga</h2>
+  <input id="sportInput" placeholder="Activité...">
+  <button onclick="addSport()">Ajouter</button>
+  <ul id="sportList"></ul>
+</section>
+
+</main>
+
+<script src="script.js"></script>
+
 </body>
 </html>
