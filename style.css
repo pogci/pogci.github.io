@@ -1,0 +1,44 @@
+body {
+  font-family: Arial;
+  background: #f7f5f2;
+  color: #333;
+  text-align: center;
+}
+
+header {
+  background: #e8dff5;
+  padding: 20px;
+}
+
+nav button {
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  background: #d4f1f4;
+  cursor: pointer;
+}
+
+.page {
+  margin-top: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+input, textarea {
+  padding: 10px;
+  margin: 10px;
+  width: 60%;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  background: #fff;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 10px;
+}
