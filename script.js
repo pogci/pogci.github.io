@@ -156,3 +156,60 @@ requestNotification();
 
 // Rappel toutes les semaines (simulation: 10s pour tester)
 setInterval(remindPlants, 10000);
+
+
+//Calendar
+let currentDate = new Date();
+
+function renderCalendar() {
+  let calendar = document.getElementById("calendar");
+  calendar.innerHTML = "";
+
+  let monthLabel = document.getElementById("monthLabel");
+  monthLabel.textContent = currentDate.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+
+  let year = currentDate.getFullYear();
+  let month = currentDate.getMonth();
+
+  let firstDay = new Date(year, month, 1).getDay();
+  let daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let saved = JSON.parse(localStorage.getItem("calendar")) || {};
+
+  for (let i = 0; i < firstDay; i++) {
+    calendar.innerHTML += `<div></div>`;
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    let key = `${year}-${month}-${d}`;
+    let value = saved[key] || "";
+
+    let div = document.createElement("div");
+    div.className = "day";
+
+    div.innerHTML = `
+      <strong>${d}</strong>
+      <textarea onchange="saveDay('${key}', this.value)">${value}</textarea>
+    `;
+
+    calendar.appendChild(div);
+  }
+}
+
+function saveDay(key, value) {
+  let data = JSON.parse(localStorage.getItem("calendar")) || {};
+  data[key] = value;
+  localStorage.setItem("calendar", JSON.stringify(data));
+}
+
+function nextMonth() {
+  currentDate.setMonth(currentDate.getMonth() + 1);
+  renderCalendar();
+}
+
+function prevMonth() {
+  currentDate.setMonth(currentDate.getMonth() - 1);
+  renderCalendar();
+}
+
+renderCalendar();
