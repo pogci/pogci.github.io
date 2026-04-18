@@ -1,6 +1,9 @@
 function showPage(id) {
-  document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
+  document.querySelectorAll(".page").forEach(p => {
+    p.style.display = "none";
+  });
+
+  document.getElementById(id).style.display = "block";
 }
 
 /* =======================
@@ -28,7 +31,7 @@ auth.onAuthStateChanged(user => {
 });
 
 /* =======================
-   COURSES (SYNC FIREBASE)
+   COURSES (FIREBASE)
 ======================= */
 
 function addCourse() {
@@ -99,7 +102,7 @@ function renderPlants() {
 renderPlants();
 
 /* =======================
-   CALENDRIER SIMPLE (local + upgrade Firebase après)
+   CALENDRIER SIMPLE
 ======================= */
 
 let currentDate = new Date();
@@ -113,7 +116,6 @@ function renderCalendar() {
 
   let year = currentDate.getFullYear();
   let month = currentDate.getMonth();
-
   let days = new Date(year, month+1, 0).getDate();
 
   for (let i=1;i<=days;i++){
