@@ -1,80 +1,50 @@
-/* ===== RESET & BASE ===== */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   background: #f8f9fb;
   color: #1e1e1e;
-  line-height: 1.5;
 }
 
 /* ===== HEADER ===== */
 header {
-  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
-  color: white;
-  padding: 2rem 1rem;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.25);
+  padding: 2.5rem 1rem 1.5rem;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  color: white;
+  box-shadow: 0 2px 20px rgba(124,58,237,0.2);
 }
-
 header h1 {
-  margin: 0 0 0.25rem;
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-header p {
   margin: 0;
-  opacity: 0.85;
-  font-size: 0.95rem;
+  font-size: 1.9rem;
 }
+header p { margin: 4px 0; }
 
-#currentUser {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-
-/* ===== LOGIN CARD ===== */
+/* ===== LOGIN ===== */
 .card {
   max-width: 360px;
-  margin: 3rem auto;
+  margin: 4rem auto;
   background: white;
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   text-align: center;
 }
-
-.card h2 {
-  margin: 0 0 1.5rem;
-  font-weight: 600;
-}
-
-.card input {
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
+.card input { width: 100%; margin-bottom: 1rem; }
 .card button {
   width: 100%;
   padding: 0.75rem;
-  font-size: 1rem;
   border: none;
   border-radius: 10px;
   background: #7c3aed;
   color: white;
   cursor: pointer;
+  font-weight: 500;
   transition: background 0.2s;
 }
-
-.card button:hover {
-  background: #6d28d9;
-}
+.card button:hover { background: #6d28d9; }
 
 /* ===== NAVIGATION ===== */
 nav {
@@ -84,12 +54,8 @@ nav {
   gap: 0.5rem;
   padding: 1rem;
   background: white;
-  border-bottom: 1px solid #e5e7eb;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  border-bottom: 1px solid #eee;
 }
-
 nav button {
   border: none;
   padding: 0.6rem 1.2rem;
@@ -100,243 +66,118 @@ nav button {
   cursor: pointer;
   transition: all 0.2s;
 }
+nav button:hover { background: #7c3aed; color: white; }
 
-nav button:hover,
-nav button:focus {
-  background: #7c3aed;
-  color: white;
-}
-
-/* ===== PAGE SECTIONS ===== */
+/* ===== SECTIONS ===== */
 .page {
   max-width: 900px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
-
 .page h2 {
   font-size: 1.5rem;
-  font-weight: 600;
   margin-bottom: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
-/* ===== INPUTS & BUTTONS ===== */
+/* ===== INPUTS ===== */
 input, textarea {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #ddd;
   border-radius: 10px;
   font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
 }
-
+textarea { min-height: 100px; resize: vertical; }
 input:focus, textarea:focus {
   outline: none;
   border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
 }
 
-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-button {
-  font-family: inherit;
-}
-
-.page > button,
-.page > input + button {
-  margin-top: 0.75rem;
-  padding: 0.65rem 1.25rem;
-  border: none;
-  border-radius: 10px;
-  background: #7c3aed;
-  color: white;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.page > button:hover {
-  background: #6d28d9;
-}
-
-/* ===== LISTS (courses, notes, sport) ===== */
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 1.5rem 0 0;
-}
-
+/* ===== LISTS ===== */
+ul { list-style: none; padding: 0; margin: 1rem 0 0; }
 li {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
-  padding: 1rem 1.25rem;
-  margin-bottom: 0.75rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  transition: box-shadow 0.2s;
 }
-
-li:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-}
-
 li button {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  opacity: 0.5;
-  transition: opacity 0.2s;
+  background: none; border: none; cursor: pointer;
+  opacity: 0.5; font-size: 1.1rem;
 }
-
-li button:hover {
-  opacity: 1;
-}
+li button:hover { opacity: 1; }
 
 /* ===== CALENDAR ===== */
-#agenda > div:first-of-type {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-}
-
-#agenda > div:first-of-type button {
-  background: #f3f4f6;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-#agenda > div:first-of-type button:hover {
-  background: #e5e7eb;
-}
-
-#monthLabel {
-  font-weight: 600;
-  font-size: 1.1rem;
-  text-transform: capitalize;
-}
-
 #calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 6px;
 }
-
 .day {
   background: white;
   border-radius: 10px;
-  padding: 0.5rem;
+  padding: 8px;
   min-height: 100px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
-
 .day-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 600;
-  font-size: 0.85rem;
-  margin-bottom: 0.4rem;
 }
-
 .day-header button {
-  background: #f3f4f6;
-  border: none;
-  border-radius: 6px;
-  width: 22px;
-  height: 22px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background 0.2s;
+  background: #eee; border: none; border-radius: 6px;
+  width: 22px; height: 22px; cursor: pointer;
 }
-
-.day-header button:hover {
-  background: #7c3aed;
-  color: white;
-}
-
-.day input {
-  font-size: 0.8rem;
-  padding: 0.4rem;
-  margin-top: 0.25rem;
-}
-
-.events {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: auto;
-  overflow-y: auto;
-  max-height: 120px;
-}
-
+.day-header button:hover { background: #7c3aed; color: white; }
 .event {
   background: #fafafa;
+  border-left: 3px solid #7c3aed;
+  padding: 5px;
+  margin-top: 5px;
   border-radius: 6px;
-  padding: 0.4rem 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.25rem;
-  border-left: 3px solid #7c3aed;
 }
 
-.event button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.7rem;
-  opacity: 0.4;
-  transition: opacity 0.2s;
+/* ===== ACTIVITÉS ===== */
+#suggestButton { margin-top: 1rem; }
+#suggestionBox {
+  margin-top: 1.5rem;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.3s, opacity 0.3s;
 }
-
-.event button:hover {
-  opacity: 1;
-}
+#suggestionBox.fade { transform: scale(1.05); opacity: 0.9; }
 
 /* ===== PLANTES ===== */
-#plantList li {
-  justify-content: flex-start;
-  gap: 0.75rem;
-}
+#plantList li { flex-direction: column; align-items: flex-start; }
+#plantList small { color: #666; margin-top: 4px; }
 
-#plantList input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #7c3aed;
+/* ===== GALERIE ===== */
+#galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 1rem;
 }
-
-/* ===== SPOTIFY EMBED ===== */
-iframe {
-  margin-top: 2rem;
-  border: none;
+#galleryGrid img {
+  width: 100%;
   border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 600px) {
-  #calendar {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  nav button {
-    font-size: 0.85rem;
-    padding: 0.5rem 0.9rem;
-  }
+@media (max-width: 640px) {
+  #calendar { grid-template-columns: repeat(3, 1fr); }
 }
