@@ -236,3 +236,66 @@ body[data-theme="dark"] li {
   margin-top:4px;
   color:#ccc;
 }
+
+/* === Effet Fade pour Inspire‑moi === */
+#suggestionBox.fade {
+  animation: fadePulse 0.5s ease;
+}
+@keyframes fadePulse {
+  0% {transform: scale(0.95); opacity: 0.5;}
+  50% {transform: scale(1.05); opacity: 1;}
+  100% {transform: scale(1); opacity: 1;}
+}
+
+/* === Galerie === */
+#galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+  gap: 16px;
+  margin-top: 1.5rem;
+}
+.photo-card {
+  text-align: center;
+  color: #ccc;
+  position: relative;
+}
+.photo-wrapper {
+  position: relative;
+}
+.photo-wrapper img {
+  width: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  transition: transform .4s, box-shadow .4s;
+  box-shadow: 0 4px 25px rgba(155,0,255,0.4);
+}
+.photo-wrapper img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(0,255,247,0.8);
+}
+.del-photo {
+  position: absolute;
+  top:6px;
+  right:6px;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  color: #fff;
+  font-size: .9rem;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  line-height: 18px;
+  text-align: center;
+  transition: background .2s;
+}
+.del-photo:hover {
+  background: #ff1493;
+  box-shadow: 0 0 10px rgba(255,20,147,0.6);
+}
+.photo-card small {
+  display:block;
+  margin-top:6px;
+  font-size:.8rem;
+  letter-spacing:.3px;
+}
