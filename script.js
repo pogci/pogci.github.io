@@ -50,17 +50,20 @@ function initApp(){
   listenList("courses","courseList");
   listenList("notes","noteList");
   listenList("sport","sportList");
+  initGallery();
+  initActivities();
 }
 
 /* ===========================
    DASHBOARD
 =========================== */
-const suggestions=[
-  "Soirée crêpes 🥞","Marathon de séries 🎬","Randonnée 🌄",
-  "Atelier DIY déco 🪴","Soirée spa 💅","Cours de danse 💃",
-  "Balade au marché 🌽","Picnic au parc 🧺"
-];
 function renderDashboard(){
+  const suggestions=[
+    "Soirée crêpes 🥞","Marathon de séries 🎬","Randonnée 🌄",
+    "Atelier DIY déco 🪴","Soirée spa 💅","Cours de danse 💃",
+    "Balade au marché 🌽","Picnic au parc 🧺","Soirée jeux vidéo 🎮",
+    "Session karaoké 🎤","Cuisiner un plat insolite 🍛"
+  ];
   const act=suggestions[Math.floor(Math.random()*suggestions.length)];
   document.getElementById("dailyActivity").textContent=act;
   db.collection("courses").get().then(s=>{
@@ -75,7 +78,7 @@ function renderDashboard(){
 }
 
 /* ===========================
-   LISTES COURSES/NOTES/SPORT
+   LISTES COURSES / NOTES / SPORT
 =========================== */
 function addCourse(){addItem("courseInput","courses");}
 function addNote(){addItem("noteInput","notes");}
@@ -102,9 +105,9 @@ function listenList(coll,listId){
   });
 }
 function getUserColor(email){
-  if(email.toLowerCase().includes("elodie")) return "#a855f7";
-  if(email.toLowerCase().includes("cecilia")) return "#06b6d4";
-  return "#4f46e5";
+  if(email.toLowerCase().includes("elodie")) return "#9b00ff";
+  if(email.toLowerCase().includes("cecilia")) return "#00fff7";
+  return "#0066ff";
 }
 
 /* ===========================
@@ -180,89 +183,150 @@ function nextMonth(){currentDate.setMonth(currentDate.getMonth()+1);renderCalend
 function prevMonth(){currentDate.setMonth(currentDate.getMonth()-1);renderCalendar();}
 
 /* ===========================
-   AURORA CANVAS - BLOBS + RAYS
+   ACTIVITÉS – INSPIRE‑MOI
+=========================== */
+function initActivities(){
+  const btn = document.getElementById("suggestButton");
+  const box = document.getElementById("suggestionBox");
+  if(!btn || !box) return;
+
+  const ideas = [
+    "Soirée crêpes 🥞","Randonnée 🌄","Atelier DIY arts fantasy 🎨",
+    "Soirée spa maison 💅","Session jeu vidéo coop 🎮",
+    "Balade au marché 🌽","Pic‑nic au parc 🧺",
+    "Session photo galactique 📸","Cuisine de monde 🍜","Dessin de Lumia 🐈‍⬛"
+  ];
+
+  btn.addEventListener("click",()=>{
+    const idea=ideas[Math.floor(Math.random()*ideas.length)];
+    box.textContent=idea;
+    box.classList.add("fade");
+    setTimeout(()=>box.classList.remove("fade"),500);
+  });
+}
+
+/* ===========================
+   GALERIE – UPLOAD & DELETE
+=========================== */
+function initGallery(){
+  const gallery=document.getElementById("galleryGrid");
+  const upload=document.getElementById("photoUpload");
+  if(!gallery || !upload) return;
+
+  upload.addEventListener("change",e=>{
+    const file=e.target.files[0];
+    if(!file||!auth.currentUser) return;
+    const ref=storage.ref(`photos/${auth.currentUser.uid}/${Date.now()}_${file.name}`);
+    ref.put(file).then(()=>{
+      ref.getDownloadURL().then(url=>{
+        db.collection("photos").add({
+          url,
+          user:auth.currentUser.email,
+          created:Date.now()
+        });
+      });
+    });
+  });
+
+  db.collection("photos").orderBy("created","desc").onSnapshot(snap=>{
+    gallery.innerHTML="";
+    snap.forEach(doc=>{
+      const d=doc.data();
+      const div=document.createElement("div");
+      div.className="photo-card";
+      const isOwner = auth.currentUser && d.user===auth.currentUser.email;
+      div.innerHTML=`
+        <div class="photo-wrapper">
+          ${isOwner ? `<button class="del-photo" onclick="deletePhoto('${doc.id}','${d.url}')">❌</button>` : ""}
+          <img src="${d.url}" alt="photo">
+        </div>
+        <small>${d.user.split("@")[0]}</small>
+      `;
+      gallery.appendChild(div);
+    });
+  });
+}
+
+function deletePhoto(id,url){
+  // supprime du Firestore
+  db.collection("photos").doc(id).delete();
+  // supprime du Storage
+  storage.refFromURL(url).delete().catch(()=>{});
+}
+
+/* ===========================
+   AURORA CANVAS
 =========================== */
 const canvas=document.getElementById("auroraCanvas");
-const ctx=canvas.getContext("2d");
-let w,h,blobs=[],rays=[],mouse={x:0,y:0};
+if(canvas){
+  const ctx=canvas.getContext("2d");
+  let w,h,blobs=[],rays=[],mouse={x:0,y:0};
+  function resize(){w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight;}
+  window.addEventListener("resize",resize); resize();
 
-function resize(){
-  w=canvas.width=window.innerWidth;
-  h=canvas.height=window.innerHeight;
+  function createBlob(){
+    return {
+      x:Math.random()*w,
+      y:Math.random()*h,
+      r:Math.random()*200+180,
+      color:`hsla(${Math.random()*360},100%,60%,0.5)`,
+      vx:(Math.random()-.5)*0.3,
+      vy:(Math.random()-.5)*0.3
+    };
+  }
+  function createRay(){
+    return {
+      x:Math.random()*w,
+      y:Math.random()*h,
+      len:Math.random()*w/4+w/8,
+      a:Math.random()*Math.PI*2,
+      width:Math.random()*2+0.5,
+      color:`hsla(${Math.random()*360},100%,70%,0.25)`
+    };
+  }
+  for(let i=0;i<4;i++) blobs.push(createBlob());
+  for(let i=0;i<6;i++) rays.push(createRay());
+
+  window.addEventListener("mousemove",e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+
+  function drawAurora(){
+    ctx.clearRect(0,0,w,h);
+    rays.forEach(r=>{
+      r.x+=Math.cos(r.a)*0.3;
+      r.y+=Math.sin(r.a)*0.3;
+      if(r.x<-r.len||r.y<-r.len||r.x>w+r.len||r.y>h+r.len){r.x=Math.random()*w;r.y=Math.random()*h;}
+      const grad=ctx.createLinearGradient(r.x,r.y,r.x+Math.cos(r.a)*r.len,r.y+Math.sin(r.a)*r.len);
+      grad.addColorStop(0,'transparent');
+      grad.addColorStop(0.5,r.color);
+      grad.addColorStop(1,'transparent');
+      ctx.strokeStyle=grad;
+      ctx.lineWidth=r.width;
+      ctx.beginPath();
+      ctx.moveTo(r.x,r.y);
+      ctx.lineTo(r.x+Math.cos(r.a)*r.len,r.y+Math.sin(r.a)*r.len);
+      ctx.stroke();
+    });
+    blobs.forEach(b=>{
+      const dx=(mouse.x||w/2)-b.x;
+      const dy=(mouse.y||h/2)-b.y;
+      b.x+=b.vx+dx*0.00005;
+      b.y+=b.vy+dy*0.00005;
+      const grad=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
+      grad.addColorStop(0,b.color);
+      grad.addColorStop(1,'transparent');
+      ctx.fillStyle=grad;
+      ctx.beginPath();
+      ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+      ctx.fill();
+      if(b.x<-b.r) b.x=w+b.r;
+      if(b.x>w+b.r) b.x=-b.r;
+      if(b.y<-b.r) b.y=h+b.r;
+      if(b.y>h+b.r) b.y=-b.r;
+    });
+    requestAnimationFrame(drawAurora);
+  }
+  drawAurora();
 }
-window.addEventListener("resize",resize);
-resize();
-
-function createBlob(){
-  return {
-    x:Math.random()*w,
-    y:Math.random()*h,
-    r:Math.random()*200+150,
-    color:`hsla(${Math.random()*360},80%,60%,0.4)`,
-    vx:(Math.random()-.5)*0.2,
-    vy:(Math.random()-.5)*0.2
-  };
-}
-function createRay(){
-  return {
-    x:Math.random()*w,
-    y:Math.random()*h,
-    len:Math.random()*w/4+w/8,
-    a:Math.random()*Math.PI*2,
-    width:Math.random()*2+0.5,
-    color:`hsla(${Math.random()*360},100%,70%,0.15)`
-  };
-}
-for(let i=0;i<4;i++) blobs.push(createBlob());
-for(let i=0;i<6;i++) rays.push(createRay());
-
-window.addEventListener("mousemove",e=>{
-  mouse.x=e.clientX;
-  mouse.y=e.clientY;
-});
-
-function drawAurora(){
-  ctx.clearRect(0,0,w,h);
-
-  // RAYS
-  rays.forEach(r=>{
-    r.x+=Math.cos(r.a)*0.3;
-    r.y+=Math.sin(r.a)*0.3;
-    if(r.x<-r.len||r.y<-r.len||r.x>w+r.len||r.y>h+r.len){r.x=Math.random()*w;r.y=Math.random()*h;}
-    const grad=ctx.createLinearGradient(r.x,r.y,r.x+Math.cos(r.a)*r.len,r.y+Math.sin(r.a)*r.len);
-    grad.addColorStop(0,'transparent');
-    grad.addColorStop(0.5,r.color);
-    grad.addColorStop(1,'transparent');
-    ctx.strokeStyle=grad;
-    ctx.lineWidth=r.width;
-    ctx.beginPath();
-    ctx.moveTo(r.x,r.y);
-    ctx.lineTo(r.x+Math.cos(r.a)*r.len,r.y+Math.sin(r.a)*r.len);
-    ctx.stroke();
-  });
-
-  // BLOBS
-  blobs.forEach(b=>{
-    const dx=(mouse.x||w/2)-b.x;
-    const dy=(mouse.y||h/2)-b.y;
-    b.x+=b.vx+dx*0.00005;
-    b.y+=b.vy+dy*0.00005;
-    const grad=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
-    grad.addColorStop(0,b.color);
-    grad.addColorStop(1,'transparent');
-    ctx.fillStyle=grad;
-    ctx.beginPath();
-    ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
-    ctx.fill();
-    if(b.x< -b.r) b.x=w+b.r;
-    if(b.x>w+b.r) b.x=-b.r;
-    if(b.y< -b.r) b.y=h+b.r;
-    if(b.y>h+b.r) b.y=-b.r;
-  });
-
-  requestAnimationFrame(drawAurora);
-}
-drawAurora();
 
 /* ===========================
    PARALLAX
