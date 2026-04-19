@@ -31,6 +31,24 @@ auth.onAuthStateChanged(user => {
 });
 
 /* =======================
+   UTILS
+======================= */
+
+function getUserColor(email) {
+  if (!email) return "black";
+
+  if (email.toLowerCase().includes("elodie")) {
+    return "#9b5de5"; // violet
+  }
+
+  if (email.toLowerCase().includes("cecilia")) {
+    return "#2a9d8f"; // vert
+  }
+
+  return "#333";
+}
+
+/* =======================
    COURSES
 ======================= */
 
@@ -56,7 +74,7 @@ db.collection("courses").orderBy("created")
     let d = doc.data();
 
     list.innerHTML += `
-      <li>
+      <li style="color:${getUserColor(d.user)}">
         <strong>${d.user}</strong> : ${d.text}
         <button onclick="deleteCourse('${doc.id}')">❌</button>
       </li>
@@ -94,7 +112,7 @@ db.collection("notes").orderBy("created")
     let d = doc.data();
 
     list.innerHTML += `
-      <li>
+      <li style="color:${getUserColor(d.user)}">
         <strong>${d.user}</strong> : ${d.text}
         <button onclick="deleteNote('${doc.id}')">❌</button>
       </li>
@@ -132,7 +150,7 @@ db.collection("sport").orderBy("created")
     let d = doc.data();
 
     list.innerHTML += `
-      <li>
+      <li style="color:${getUserColor(d.user)}">
         <strong>${d.user}</strong> : ${d.text}
         <button onclick="deleteSport('${doc.id}')">❌</button>
       </li>
@@ -170,73 +188,134 @@ function renderPlants() {
 renderPlants();
 
 /* =======================
-   CALENDRIER COLLABORATIF
+   CALENDRIER PRO
 ======================= */
 
 let currentDate = new Date();
 
 function renderCalendar() {
-  let cal = document.getElementById("calendar");
+  const cal = document.getElementById("calendar");
   cal.innerHTML = "";
 
   document.getElementById("monthLabel").textContent =
     currentDate.toLocaleString("fr-FR",{month:"long",year:"numeric"});
 
-  let year = currentDate.getFullYear();
-  let month = currentDate.getMonth();
-  let days = new Date(year, month+1, 0).getDate();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const days = new Date(year, month+1, 0).getDate();
 
   for (let i=1;i<=days;i++){
     const key = `${year}-${month+1}-${i}`;
 
-    cal.innerHTML += `
-      <div class="day">
+    const day = document.createElement("div");
+    day.className = "day";
+
+    day.innerHTML = `
+      <div class="day-header">
         <strong>${i}</strong>
-        <input placeholder="event"
-          onkeydown="addEvent(event,'${key}')">
-        <div id="ev-${key}"></div>
+        <button onclick="openInput('${key}')">＋</button>
       </div>
+
+      <div id="input-${key}" style="display:none;">
+        <input placeholder="Nouvel event"
+          onkeydown="submitEvent(event,'${key}')">
+      </div>
+
+      <div id="ev-${key}" class="events"></div>
     `;
 
-    listenEvents(key);
+    cal.appendChild(day);
+
+    setTimeout(() => listenEvents(key), 0);
   }
 }
 
-function addEvent(e,key){
+/* =======================
+   ADD EVENT
+======================= */
+
+function openInput(key){
+  const div = document.getElementById("input-"+key);
+  div.style.display = div.style.display === "none" ? "block" : "none";
+}
+
+function submitEvent(e,key){
   if(e.key==="Enter"){
     const text = e.target.value;
-    if (!text) return;
+    if(!text) return;
 
-    db.collection("calendar").doc(key).collection("events").add({
-      text,
-      user:auth.currentUser.email,
-      created:Date.now()
-    });
+    db.collection("calendar")
+      .doc(key)
+      .collection("events")
+      .add({
+        text,
+        user: auth.currentUser.email,
+        created: Date.now()
+      });
 
     e.target.value="";
+    document.getElementById("input-"+key).style.display="none";
   }
 }
 
+/* =======================
+   READ EVENTS
+======================= */
+
 function listenEvents(key){
-  let container=document.getElementById("ev-"+key);
+  const container = document.getElementById("ev-"+key);
+  if(!container) return;
 
-  db.collection("calendar").doc(key).collection("events")
-  .orderBy("created")
-  .onSnapshot(snap=>{
-    container.innerHTML="";
-    snap.forEach(doc=>{
-      let d=doc.data();
+  db.collection("calendar")
+    .doc(key)
+    .collection("events")
+    .orderBy("created")
+    .onSnapshot(snap=>{
+      container.innerHTML="";
 
-      container.innerHTML += `
-        <div>
-          <small>${d.user}</small><br>
-          ${d.text}
+      snap.forEach(doc=>{
+        const d = doc.data();
+
+        const event = document.createElement("div");
+        event.className = "event";
+
+        event.style.borderLeft = `4px solid ${getUserColor(d.user)}`;
+
+        event.innerHTML = `
+          <div onclick="editEvent('${key}','${doc.id}','${d.text}')">
+            <strong>${d.text}</strong><br>
+            <small>${d.user}</small>
+          </div>
           <button onclick="deleteEvent('${key}','${doc.id}')">❌</button>
-        </div>
-      `;
+        `;
+
+        container.appendChild(event);
+      });
     });
-  });
 }
+
+/* =======================
+   EDIT EVENT
+======================= */
+
+function editEvent(key,id,oldText){
+  const newText = prompt("Modifier l'événement :", oldText);
+
+  if(newText === null) return;
+  if(newText === "") return;
+
+  db.collection("calendar")
+    .doc(key)
+    .collection("events")
+    .doc(id)
+    .update({
+      text: newText
+    });
+}
+
+/* =======================
+   DELETE
+======================= */
 
 function deleteEvent(key,id){
   db.collection("calendar")
@@ -245,6 +324,10 @@ function deleteEvent(key,id){
     .doc(id)
     .delete();
 }
+
+/* =======================
+   NAVIGATION
+======================= */
 
 function nextMonth(){
   currentDate.setMonth(currentDate.getMonth()+1);
