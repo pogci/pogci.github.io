@@ -1,18 +1,16 @@
-/* =============================
-   COLOC VIBES – FRENCH TOUCH AURORA
-   ============================= */
+/* ===============================
+   COLOC VIBES – FRENCH TOUCH DELUXE
+   =============================== */
 
 :root {
-  --violet: #a855f7;
-  --blue: #4f46e5;
-  --pink: #ec4899;
-  --cyan: #06b6d4;
-  --bg-dark: #0d0d15;
-  --bg-light: #f5f5ff;
-  --glass-light: rgba(255,255,255,0.3);
-  --glass-dark: rgba(10,10,20,0.6);
-  --shadow-neon: 0 0 20px rgba(168,85,247,0.4);
-  --shadow-glow: 0 0 40px rgba(168,85,247,0.25);
+  --violet: #9b00ff;
+  --blue: #0066ff;
+  --pink: #ff1493;
+  --cyan: #00fff7;
+  --bg-dark: #060611;
+  --bg-light: #f3f4ff;
+  --glass-light: rgba(255,255,255,0.25);
+  --glass-dark: rgba(10,10,25,0.65);
 }
 
 /* RESET */
@@ -25,10 +23,10 @@
 html, body {
   height: 100%;
   font-family: "Exo 2", sans-serif;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
   background: var(--bg-light);
   color: #111;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 /* THEME DARK */
@@ -37,228 +35,180 @@ body[data-theme="dark"] {
   color: #e7e9ff;
 }
 
-/* CANVAS BACKGROUND */
+/* ================= HEADER ================= */
 #auroraCanvas {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
-  opacity: 0.45;
+  opacity: .55;
 }
 
-/* HEADER */
 header {
   text-align: center;
   padding: 3rem 1rem 1rem;
-  animation: fadeIn 1.2s ease-out forwards;
+  animation: fadeIn 1s ease forwards;
 }
-
 header .logo {
   font-family: "Audiowide", cursive;
   font-size: 2.4rem;
-  background: linear-gradient(120deg, var(--pink), var(--violet), var(--cyan));
+  background: linear-gradient(135deg, var(--pink), var(--violet), var(--blue), var(--cyan));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 2px;
-  text-shadow: 0 0 18px rgba(255,255,255,0.2);
+  text-shadow: 0 0 22px rgba(255,255,255,0.25);
 }
 
-#currentUser {
-  font-size: 0.9rem;
-  margin-top: 0.3rem;
-  opacity: 0.7;
-}
-
-/* SWITCH THEME */
-.toggle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: .4rem;
-  font-size: 1.1rem;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 46px;
-  height: 24px;
-}
-.switch input { opacity:0; width:0; height:0;}
-.slider {
-  position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;
-  background:#ccc;border-radius:24px;transition:.3s;
-}
-.slider::before {
-  position:absolute;content:"";height:18px;width:18px;left:4px;bottom:3px;
-  background:white;border-radius:50%;transition:.3s;
-}
-input:checked + .slider {
-  background:var(--violet);
-}
-input:checked + .slider:before { transform:translateX(22px); }
-
-/* NAVBAR GALAXY GLASS */
+/* ================= NAVBAR ================= */
 #navbar {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100%;
-  height: 56px;
-  backdrop-filter: blur(25px);
-  background: linear-gradient(135deg, rgba(20,20,30,0.6), rgba(60,0,80,0.4));
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  height: 70px;
   display: flex;
   justify-content: center;
-  gap: .6rem;
-  z-index: 50;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+  gap: .8rem;
+  backdrop-filter: blur(25px);
+  background: linear-gradient(130deg, rgba(20,20,30,0.85), rgba(50,0,60,0.7));
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 5px 30px rgba(0,0,0,0.65);
+  z-index: 100;
 }
-
 #navbar button {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.15);
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
   border-radius: 14px;
-  padding: .3rem .8rem;
+  padding: .4rem .9rem;
   cursor: pointer;
-  transition: all 0.25s ease;
-  text-shadow: 0 0 5px rgba(255,255,255,0.3);
+  transition: all .2s ease;
 }
 #navbar button:hover {
-  background: linear-gradient(135deg,var(--violet),var(--blue));
-  box-shadow: 0 0 18px rgba(168,85,247,0.7);
+  background: linear-gradient(135deg, var(--violet), var(--cyan));
+  box-shadow: 0 0 24px 6px rgba(155,0,255,0.7);
   transform: translateY(-2px);
 }
+main { margin-top: 90px; }
 
-/* LAYOUT */
-main {
-  margin-top: 70px;
-  perspective: 1000px;
-}
+/* ================= CARDS ================= */
 .page {
-  padding: 2rem 1rem;
   max-width: 900px;
   margin: auto;
-  animation: fadeUp 0.8s ease;
-  transform-style: preserve-3d;
+  padding: 2rem 1rem;
+  animation: fadeUp .6s ease;
 }
 
-/* DASHBOARD GRID */
+.card {
+  background: var(--glass-light);
+  backdrop-filter: blur(18px);
+  border-radius: 18px;
+  padding: 1.6rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25), 0 0 35px rgba(155,0,255,0.25);
+  transition: all .35s ease;
+}
+body[data-theme="dark"] .card {
+  background: var(--glass-dark);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.card.floating:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.45),
+              0 0 40px rgba(155,0,255,0.8),
+              0 0 60px rgba(0,255,247,0.7);
+}
+
+/* DASHBOARD */
 .dash-grid {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
 }
-.summary ul { list-style: none; padding: 0; }
+.summary ul { list-style:none; padding:0; }
 
-/* CARD STYLES */
-.card {
-  background: var(--glass-light);
-  backdrop-filter: blur(18px);
-  border-radius: 16px;
-  padding: 1.5rem;
-  color: inherit;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  transition: all .3s ease;
-}
-body[data-theme="dark"] .card {
-  background: var(--glass-dark);
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 0 20px rgba(0,0,0,0.4),
-              0 0 30px rgba(168,85,247,0.15);
-}
-
-.card.floating:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25),
-              0 0 20px rgba(168,85,247,0.4);
-}
-
-/* INPUTS / BUTTONS */
+/* ================= INPUTS / BUTTONS ================= */
 input, textarea {
   width: 100%;
-  padding: 0.8rem;
+  padding: .9rem;
   border-radius: 12px;
   border: none;
-  margin: 0.5rem 0;
+  margin: .6rem 0;
   background: rgba(255,255,255,0.7);
 }
 body[data-theme="dark"] input,
 body[data-theme="dark"] textarea {
-  background: rgba(50,50,75,0.6);
+  background: rgba(40,40,70,0.6);
   color: #fff;
 }
+
 button {
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg,var(--violet),var(--cyan));
+  background: linear-gradient(135deg, var(--pink), var(--violet));
   color: #fff;
-  padding: 0.7rem 1.2rem;
+  padding: 0.7rem 1.4rem;
   cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   transition: all .3s ease;
+  box-shadow: 0 6px 18px rgba(155,0,255,0.45);
 }
 button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(168,85,247,0.5), inset 0 0 6px rgba(255,255,255,0.2);
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, var(--violet), var(--cyan));
+  box-shadow: 0 8px 30px rgba(0,255,247,0.6);
 }
 
-/* LIST ITEMS */
+/* ================= LISTES ================= */
 ul { list-style: none; padding: 0; }
 li {
-  background: rgba(255,255,255,0.3);
-  margin: .6rem 0;
-  padding: .6rem;
-  border-radius: 10px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: .8rem;
+  margin-bottom: .6rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 body[data-theme="dark"] li {
-  background: rgba(50,50,70,0.6);
+  background: rgba(50,50,70,0.7);
 }
 
-/* CALENDAR */
+/* ================= CALENDAR ================= */
 #calendar {
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(120px,1fr));
   gap: 8px;
 }
-#calendar .card {
-  padding: .8rem;
-}
+#calendar .card { padding: .9rem; }
 
-/* LOGIN PAGE CENTER */
+/* ================= LOGIN ================= */
 .login-card {
-  margin-top: 15vh;
   text-align: center;
   max-width: 380px;
+  margin-top: 18vh;
 }
 
-/* ANIMATIONS */
+/* ================= ANIMATIONS ================= */
 @keyframes fadeUp {
-  from {opacity:0; transform: translateY(15px);}
-  to {opacity:1; transform: translateY(0);}
+  from {opacity:0; transform:translateY(20px);}
+  to {opacity:1; transform:translateY(0);}
 }
 @keyframes fadeIn {
   from {opacity:0; transform:translateY(-10px);}
   to {opacity:1; transform:translateY(0);}
 }
 
-/* RESPONSIVE */
-@media (max-width:700px){
+/* ================= RESPONSIVE ================= */
+@media(max-width:700px){
   #navbar {
     justify-content: space-around;
     flex-wrap: nowrap;
     overflow-x: auto;
   }
-  .page { padding: 1rem; }
-  .logo { font-size: 1.8rem; }
-  button { font-size: 0.9rem; }
+  #navbar button { font-size: 1rem; padding: .4rem .6rem; }
+  .logo { font-size: 1.9rem; }
+  .page { padding: 1.3rem; }
+  button { font-size: .9rem; }
 }
