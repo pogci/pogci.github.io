@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Coloc Vibes ✨ Aurora Edition</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600&family=Audiowide&display=swap"
     rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -38,24 +40,22 @@
 <main id="app" style="display:none;">
 
 <nav id="navbar">
-  <button onclick="showPage('dashboard')" title="Dashboard">🏠</button>
-  <button onclick="showPage('courses')" title="Courses">🛒</button>
-  <button onclick="showPage('agenda')" title="Agenda">📆</button>
-  <button onclick="showPage('plantes')" title="Plantes">🌱</button>
-  <button onclick="showPage('notes')" title="Notes">💌</button>
-  <button onclick="showPage('sport')" title="Sport">🧘‍♀️</button>
-  <button onclick="showPage('activites')" title="Activités">🎲</button>
-  <button onclick="showPage('galerie')" title="Galerie">📸</button>
-  <button onclick="showPage('absence')" title="Absence">🏖️</button>
+  <button onclick="showPage('dashboard')">🏠</button>
+  <button onclick="showPage('courses')">🛒</button>
+  <button onclick="showPage('agenda')">📆</button>
+  <button onclick="showPage('plantes')">🌱</button>
+  <button onclick="showPage('notes')">💌</button>
+  <button onclick="showPage('sport')">🧘‍♀️</button>
+  <button onclick="showPage('activites')">🎲</button>
+  <button onclick="showPage('galerie')">📸</button>
+  <button onclick="showPage('absence')">🏖️</button>
 </nav>
 
-<!-- DASHBOARD -->
 <section id="dashboard" class="page active-page">
   <h2>🏠 Tableau de bord</h2>
   <div class="dash-grid">
     <div class="card floating">
       <h3 id="greeting">Bonjour ✨</h3>
-      <p>🌤️ 25°C — Ciel clair sur la coloc</p>
     </div>
     <div class="card floating">
       <h3>🎲 Activité du jour</h3>
@@ -66,83 +66,59 @@
       <ul>
         <li>Courses : <span id="summaryCourses">0</span></li>
         <li>Notes : <span id="summaryNotes">0</span></li>
-        <li>Plantes : 🌿 OK</li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- COURSES -->
 <section id="courses" class="page" style="display:none;">
-  <h2>🛒 Courses</h2>
-  <input id="courseInput" placeholder="Ajouter un article...">
+  <input id="courseInput">
   <button onclick="addCourse()">Ajouter</button>
   <ul id="courseList"></ul>
 </section>
 
-<!-- AGENDA -->
 <section id="agenda" class="page" style="display:none;">
-  <h2>📅 Agenda</h2>
-  <div class="cal-nav">
-    <button onclick="prevMonth()">⬅</button>
-    <span id="monthLabel"></span>
-    <button onclick="nextMonth()">➡</button>
-  </div>
+  <button onclick="prevMonth()">⬅</button>
+  <span id="monthLabel"></span>
+  <button onclick="nextMonth()">➡</button>
   <div id="calendar"></div>
 </section>
 
-<!-- PLANTES -->
 <section id="plantes" class="page" style="display:none;">
-  <h2>🌱 Plantes</h2>
   <ul id="plantList"></ul>
 </section>
 
-<!-- NOTES -->
 <section id="notes" class="page" style="display:none;">
-  <h2>💌 Notes</h2>
-  <textarea id="noteInput" placeholder="Note pour ta coloc..."></textarea>
+  <textarea id="noteInput"></textarea>
   <button onclick="addNote()">Ajouter</button>
   <ul id="noteList"></ul>
- 
 </section>
 
-<!-- SPORT -->
 <section id="sport" class="page" style="display:none;">
-  <h2>🧘‍♀️ Sport</h2>
-  <input id="sportInput" placeholder="Ajouter une séance...">
+  <input id="sportInput">
   <button onclick="addSport()">Ajouter</button>
   <ul id="sportList"></ul>
 </section>
 
-<!-- ACTIVITÉS -->
 <section id="activites" class="page" style="display:none;">
-  <h2>🎲 Activités</h2>
-  <button id="suggestButton">Inspire-moi ✨</button>
-  <div id="suggestionBox" class="suggestion-box"></div>
+  <button id="suggestButton">Inspire-moi</button>
+  <div id="suggestionBox"></div>
 </section>
 
-<!-- GALERIE -->
 <section id="galerie" class="page" style="display:none;">
-  <h2>📸 Galerie</h2>
-  <label class="upload-label">
-    📁 Choisir une photo
-    <input type="file" id="photoUpload" accept="image/*">
-  </label>
+  <input type="file" id="photoUpload">
   <p id="uploadStatus"></p>
   <div id="galleryGrid"></div>
 </section>
 
-<!-- ABSENCE -->
 <section id="absence" class="page" style="display:none;">
-  <h2>🏖️ Mode absence</h2>
-  <label class="toggle-absence">
-    <input type="checkbox" id="absentToggle"> Je suis absente 🌴
-  </label>
+  <input type="checkbox" id="absentToggle">
   <div id="presenceStatus"></div>
 </section>
 
 </main>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -150,19 +126,22 @@
 
 <script>
 const firebaseConfig = {
-  apiKey:"AIzaSyDJksZ7yd4McJWI6B-PbeWFTQAfXt1tESU",
-  authDomain:"coloc-vibes.firebaseapp.com",
-  projectId:"coloc-vibes",
-  storageBucket:"coloc-vibes.firebasestorage.app",
-  messagingSenderId:"412175597941",
-  appId:"1:412175597941:web:de91af2d4ff6102f4c533c"
+  apiKey:"XXX",
+  authDomain:"XXX",
+  projectId:"XXX",
+  storageBucket:"XXX",
+  messagingSenderId:"XXX",
+  appId:"XXX"
 };
 firebase.initializeApp(firebaseConfig);
+
 const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
 </script>
 
-<script src="script.js"></script>
+<!-- ✅ IMPORTANT -->
+<script src="script.js" defer></script>
+
 </body>
 </html>
