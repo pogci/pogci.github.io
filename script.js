@@ -1,12 +1,9 @@
-
 /* =======================
    NAVIGATION
 ======================= */
 
 function showPage(id) {
-  document.querySelectorAll(".page").forEach(p => {
-    p.style.display = "none";
-  });
+  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
   document.getElementById(id).style.display = "block";
 }
 
@@ -27,316 +24,279 @@ auth.onAuthStateChanged(user => {
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("app").style.display = "block";
     document.getElementById("currentUser").textContent = user.email;
+    renderCalendar();
+    renderPlants();
+    Notification.requestPermission();
   }
 });
 
 /* =======================
    UTILS
 ======================= */
-
 function getUserColor(email) {
-  if (!email) return "black";
-
-  if (email.toLowerCase().includes("elodie")) {
-    return "#9b5de5"; // violet
-  }
-
-  if (email.toLowerCase().includes("cecilia")) {
-    return "#2a9d8f"; // vert
-  }
-
-  return "#333";
+  if (!email) return "#333";
+  if (email.toLowerCase().includes("elodie")) return "#9b5de5";
+  if (email.toLowerCase().includes("cecilia")) return "#2a9d8f";
+  return "#7c3aed";
 }
 
 /* =======================
    COURSES
 ======================= */
-
 function addCourse() {
   const text = document.getElementById("courseInput").value;
   if (!text) return;
 
   db.collection("courses").add({
-    text,
-    user: auth.currentUser.email,
-    created: Date.now()
+    text, user: auth.currentUser.email, created: Date.now()
   });
-
   document.getElementById("courseInput").value = "";
 }
 
 db.collection("courses").orderBy("created")
 .onSnapshot(snapshot => {
-  let list = document.getElementById("courseList");
+  const list = document.getElementById("courseList");
   list.innerHTML = "";
-
   snapshot.forEach(doc => {
-    let d = doc.data();
-
+    const d = doc.data();
     list.innerHTML += `
       <li style="color:${getUserColor(d.user)}">
         <strong>${d.user}</strong> : ${d.text}
-        <button onclick="deleteCourse('${doc.id}')">❌</button>
-      </li>
-    `;
+        <button onclick="db.collection('courses').doc('${doc.id}').delete()">❌</button>
+      </li>`;
   });
 });
-
-function deleteCourse(id) {
-  db.collection("courses").doc(id).delete();
-}
 
 /* =======================
    NOTES
 ======================= */
-
 function addNote() {
   const text = document.getElementById("noteInput").value;
   if (!text) return;
 
   db.collection("notes").add({
-    text,
-    user: auth.currentUser.email,
-    created: Date.now()
+    text, user: auth.currentUser.email, created: Date.now()
   });
-
   document.getElementById("noteInput").value = "";
 }
 
 db.collection("notes").orderBy("created")
 .onSnapshot(snapshot => {
-  let list = document.getElementById("noteList");
+  const list = document.getElementById("noteList");
   list.innerHTML = "";
-
   snapshot.forEach(doc => {
-    let d = doc.data();
-
+    const d = doc.data();
     list.innerHTML += `
       <li style="color:${getUserColor(d.user)}">
-        <strong>${d.user}</strong> : ${d.text}
-        <button onclick="deleteNote('${doc.id}')">❌</button>
-      </li>
-    `;
+        <strong>${d.user}</strong>: ${d.text}
+        <button onclick="db.collection('notes').doc('${doc.id}').delete()">❌</button>
+      </li>`;
   });
 });
-
-function deleteNote(id) {
-  db.collection("notes").doc(id).delete();
-}
 
 /* =======================
    SPORT
 ======================= */
-
 function addSport() {
   const text = document.getElementById("sportInput").value;
   if (!text) return;
 
   db.collection("sport").add({
-    text,
-    user: auth.currentUser.email,
-    created: Date.now()
+    text, user: auth.currentUser.email, created: Date.now()
   });
-
   document.getElementById("sportInput").value = "";
 }
 
 db.collection("sport").orderBy("created")
 .onSnapshot(snapshot => {
-  let list = document.getElementById("sportList");
+  const list = document.getElementById("sportList");
   list.innerHTML = "";
-
   snapshot.forEach(doc => {
-    let d = doc.data();
-
+    const d = doc.data();
     list.innerHTML += `
       <li style="color:${getUserColor(d.user)}">
-        <strong>${d.user}</strong> : ${d.text}
-        <button onclick="deleteSport('${doc.id}')">❌</button>
-      </li>
-    `;
+        <strong>${d.user}</strong>: ${d.text}
+        <button onclick="db.collection('sport').doc('${doc.id}').delete()">❌</button>
+      </li>`;
   });
 });
 
-function deleteSport(id) {
-  db.collection("sport").doc(id).delete();
-}
-
 /* =======================
-   PLANTES (simple)
+   PLANTES & ARROSAGE
 ======================= */
-
-const plantes = ["Barbara","Calypso","Aretha","Tina","Adèle"];
+const plantes = [
+  { name: "Barbara", lastWatered: null },
+  { name: "Calypso", lastWatered: null },
+  { name: "Aretha", lastWatered: null },
+  { name: "Tina", lastWatered: null },
+  { name: "Adèle", lastWatered: null },
+];
 
 function renderPlants() {
-  let list = document.getElementById("plantList");
+  const list = document.getElementById("plantList");
   list.innerHTML = "";
-
-  plantes.forEach(name => {
-    let li = document.createElement("li");
-
-    let cb = document.createElement("input");
-    cb.type = "checkbox";
-
-    li.appendChild(cb);
-    li.append(" " + name);
-
+  plantes.forEach(p => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${p.name}</strong>
+      <small>${p.lastWatered ? "Arrosée le " + new Date(p.lastWatered).toLocaleDateString("fr-FR") : "Jamais arrosée"} 💧</small>
+      <button onclick="waterPlant('${p.name}')">Arroser</button>
+    `;
     list.appendChild(li);
   });
 }
 
-renderPlants();
+function waterPlant(name) {
+  const plant = plantes.find(p => p.name === name);
+  plant.lastWatered = Date.now();
+  renderPlants();
+  new Notification(`🌿 ${name} a été arrosée !`);
+}
+
+setInterval(() => {
+  plantes.forEach(p => {
+    if (!p.lastWatered) return;
+    const days = (Date.now() - p.lastWatered) / (1000*60*60*24);
+    if (days > 3) new Notification(`💦 Pense à arroser ${p.name}`);
+  });
+}, 1000*60*60*24);
 
 /* =======================
-   CALENDRIER PRO
+   ACTIVITÉS
 ======================= */
+const suggestions = [
+  "Soirée crêpes 🥞",
+  "Marathon de séries 🎬",
+  "Randonnée 🌄",
+  "Atelier DIY déco 🪴",
+  "Soirée spa maison 💅",
+  "Cours de danse 💃",
+  "Balade au marché 🌽",
+  "Picnic au parc 🧺",
+];
+document.getElementById("suggestButton").onclick = () => {
+  const s = suggestions[Math.floor(Math.random() * suggestions.length)];
+  const box = document.getElementById("suggestionBox");
+  box.textContent = s;
+  box.classList.add("fade");
+  setTimeout(()=> box.classList.remove("fade"), 400);
+};
 
+/* =======================
+   GALERIE
+======================= */
+const gallery = document.getElementById("galleryGrid");
+document.getElementById("photoUpload").addEventListener("change", e=>{
+  const file = e.target.files[0];
+  if (!file) return;
+  const ref = storage.ref("photos/" + Date.now() + "_" + file.name);
+  ref.put(file).then(()=>{
+    ref.getDownloadURL().then(url=>{
+      db.collection("photos").add({
+        url, user: auth.currentUser.email, created: Date.now()
+      });
+    });
+  });
+});
+db.collection("photos").orderBy("created","desc").onSnapshot(snap=>{
+  gallery.innerHTML = "";
+  snap.forEach(doc=>{
+    const {url,user} = doc.data();
+    const div = document.createElement("div");
+    div.innerHTML = `<img src="${url}" alt=""><small>${user}</small>`;
+    gallery.appendChild(div);
+  });
+});
+
+/* =======================
+   MODE ABSENCE
+======================= */
+const absentToggle = document.getElementById("absentToggle");
+const presenceStatus = document.getElementById("presenceStatus");
+absentToggle.addEventListener("change", () => {
+  db.collection("status").doc(auth.currentUser.email).set({
+    absent: absentToggle.checked,
+    updated: Date.now()
+  });
+});
+db.collection("status").onSnapshot(snap=>{
+  presenceStatus.innerHTML="";
+  snap.forEach(doc=>{
+    const {absent} = doc.data();
+    presenceStatus.innerHTML += `<p><strong>${doc.id}</strong> est ${absent ? "🌴 absente" : "🏡 à la coloc"}</p>`;
+  });
+});
+
+/* =======================
+   AGENDA (Calendrier)
+======================= */
 let currentDate = new Date();
 
 function renderCalendar() {
   const cal = document.getElementById("calendar");
-  cal.innerHTML = "";
-
-  document.getElementById("monthLabel").textContent =
-    currentDate.toLocaleString("fr-FR",{month:"long",year:"numeric"});
+  cal.innerHTML="";
+  document.getElementById("monthLabel").textContent = currentDate.toLocaleString("fr-FR",{month:"long",year:"numeric"});
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const days = new Date(year, month+1, 0).getDate();
 
-  for (let i=1;i<=days;i++){
+  for (let i=1; i<=days; i++) {
     const key = `${year}-${month+1}-${i}`;
-
     const day = document.createElement("div");
     day.className = "day";
-
     day.innerHTML = `
       <div class="day-header">
         <strong>${i}</strong>
         <button onclick="openInput('${key}')">＋</button>
       </div>
-
       <div id="input-${key}" style="display:none;">
-        <input placeholder="Nouvel event"
-          onkeydown="submitEvent(event,'${key}')">
+        <input placeholder="Nouvel event" onkeydown="submitEvent(event,'${key}')">
       </div>
-
       <div id="ev-${key}" class="events"></div>
     `;
-
     cal.appendChild(day);
-
-    setTimeout(() => listenEvents(key), 0);
+    setTimeout(()=> listenEvents(key), 0);
   }
 }
 
-/* =======================
-   ADD EVENT
-======================= */
-
 function openInput(key){
   const div = document.getElementById("input-"+key);
-  div.style.display = div.style.display === "none" ? "block" : "none";
+  div.style.display = div.style.display==="none" ? "block" : "none";
 }
 
 function submitEvent(e,key){
   if(e.key==="Enter"){
     const text = e.target.value;
     if(!text) return;
-
-    db.collection("calendar")
-      .doc(key)
-      .collection("events")
-      .add({
-        text,
-        user: auth.currentUser.email,
-        created: Date.now()
-      });
-
+    db.collection("calendar").doc(key).collection("events").add({
+      text, user: auth.currentUser.email, created: Date.now()
+    });
     e.target.value="";
     document.getElementById("input-"+key).style.display="none";
   }
 }
 
-/* =======================
-   READ EVENTS
-======================= */
-
 function listenEvents(key){
   const container = document.getElementById("ev-"+key);
   if(!container) return;
-
-  db.collection("calendar")
-    .doc(key)
-    .collection("events")
-    .orderBy("created")
-    .onSnapshot(snap=>{
-      container.innerHTML="";
-
-      snap.forEach(doc=>{
-        const d = doc.data();
-
-        const event = document.createElement("div");
-        event.className = "event";
-
-        event.style.borderLeft = `4px solid ${getUserColor(d.user)}`;
-
-        event.innerHTML = `
-          <div onclick="editEvent('${key}','${doc.id}','${d.text}')">
-            <strong>${d.text}</strong><br>
-            <small>${d.user}</small>
-          </div>
+  db.collection("calendar").doc(key).collection("events").orderBy("created")
+  .onSnapshot(snap=>{
+    container.innerHTML="";
+    snap.forEach(doc=>{
+      const d = doc.data();
+      container.innerHTML += `
+        <div class="event" style="border-left:4px solid ${getUserColor(d.user)}">
+          <div>${d.text}<br><small>${d.user}</small></div>
           <button onclick="deleteEvent('${key}','${doc.id}')">❌</button>
-        `;
-
-        container.appendChild(event);
-      });
+        </div>`;
     });
+  });
 }
-
-/* =======================
-   EDIT EVENT
-======================= */
-
-function editEvent(key,id,oldText){
-  const newText = prompt("Modifier l'événement :", oldText);
-
-  if(newText === null) return;
-  if(newText === "") return;
-
-  db.collection("calendar")
-    .doc(key)
-    .collection("events")
-    .doc(id)
-    .update({
-      text: newText
-    });
-}
-
-/* =======================
-   DELETE
-======================= */
 
 function deleteEvent(key,id){
-  db.collection("calendar")
-    .doc(key)
-    .collection("events")
-    .doc(id)
-    .delete();
+  db.collection("calendar").doc(key).collection("events").doc(id).delete();
 }
 
-/* =======================
-   NAVIGATION
-======================= */
-
-function nextMonth(){
-  currentDate.setMonth(currentDate.getMonth()+1);
-  renderCalendar();
-}
-
-function prevMonth(){
-  currentDate.setMonth(currentDate.getMonth()-1);
-  renderCalendar();
-}
-
-renderCalendar();
+function nextMonth(){ currentDate.setMonth(currentDate.getMonth()+1); renderCalendar(); }
+function prevMonth(){ currentDate.setMonth(currentDate.getMonth()-1); renderCalendar(); }
