@@ -3,9 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Coloc Vibes ✨</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- GOOGLE FONTS (liens corrigés) -->
   <link rel="preconnect" href="[fonts.googleapis.com](https://fonts.googleapis.com)">
-  <link rel="stylesheet" href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap)">
+  <link rel="preconnect" href="[fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+  <link
+    rel="stylesheet"
+    href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap)">
+
+  <!-- STYLE -->
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body data-theme="light">
@@ -15,6 +22,7 @@
   <p>Élodie & Cécilia</p>
   <p id="currentUser"></p>
 
+  <!-- Thème clair / sombre -->
   <div id="themeToggle" class="toggle">
     <span>☀️</span>
     <label class="switch">
@@ -33,109 +41,120 @@
   <button onclick="login()">Se connecter</button>
 </div>
 
+<!-- APPLICATION -->
 <main id="app" style="display:none;">
 
-<nav>
-  <button onclick="showPage('courses')">Courses</button>
-  <button onclick="showPage('agenda')">Agenda</button>
-  <button onclick="showPage('plantes')">Plantes</button>
-  <button onclick="showPage('notes')">Notes</button>
-  <button onclick="showPage('sport')">Sport</button>
-  <button onclick="showPage('activites')">Activités</button>
-  <button onclick="showPage('galerie')">Galerie</button>
-  <button onclick="showPage('absence')">Mode absence</button>
-</nav>
+  <nav>
+    <button onclick="showPage('courses')">Courses</button>
+    <button onclick="showPage('agenda')">Agenda</button>
+    <button onclick="showPage('plantes')">Plantes</button>
+    <button onclick="showPage('notes')">Notes</button>
+    <button onclick="showPage('sport')">Sport</button>
+    <button onclick="showPage('activites')">Activités</button>
+    <button onclick="showPage('galerie')">Galerie</button>
+    <button onclick="showPage('absence')">Mode absence</button>
+  </nav>
 
-<!-- COURSES -->
-<section id="courses" class="page" style="display:block;">
-  <h2>🛒 Courses</h2>
-  <input id="courseInput" placeholder="Ajouter un article...">
-  <button onclick="addCourse()">Ajouter</button>
-  <ul id="courseList"></ul>
-</section>
+  <!-- COURSES -->
+  <section id="courses" class="page" style="display:block;">
+    <h2>🛒 Courses</h2>
+    <input id="courseInput" placeholder="Ajouter un article...">
+    <button onclick="addCourse()">Ajouter</button>
+    <ul id="courseList"></ul>
+  </section>
 
-<!-- AGENDA -->
-<section id="agenda" class="page" style="display:none;">
-  <h2>📅 Agenda collaboratif</h2>
-  <div>
-    <button onclick="prevMonth()">⬅</button>
-    <span id="monthLabel"></span>
-    <button onclick="nextMonth()">➡</button>
-  </div>
-  <div id="calendar"></div>
-</section>
+  <!-- AGENDA -->
+  <section id="agenda" class="page" style="display:none;">
+    <h2>📅 Agenda collaboratif</h2>
+    <div>
+      <button onclick="prevMonth()">⬅</button>
+      <span id="monthLabel"></span>
+      <button onclick="nextMonth()">➡</button>
+    </div>
+    <div id="calendar"></div>
+  </section>
 
-<!-- PLANTES -->
-<section id="plantes" class="page" style="display:none;">
-  <h2>🌱 Plantes</h2>
-  <p>Note quand tu arroses les plantes pour t’en souvenir 🌿</p>
-  <ul id="plantList"></ul>
-</section>
+  <!-- PLANTES -->
+  <section id="plantes" class="page" style="display:none;">
+    <h2>🌱 Plantes</h2>
+    <p>Note quand tu arroses les plantes pour t’en souvenir 🌿</p>
+    <ul id="plantList"></ul>
+  </section>
 
-<!-- NOTES -->
-<section id="notes" class="page" style="display:none;">
-  <h2>💌 Notes</h2>
-  <textarea id="noteInput" placeholder="Note pour ta coloc..."></textarea>
-  <button onclick="addNote()">Ajouter</button>
-  <ul id="noteList"></ul>
-  <iframe style="border-radius:12px"
-    src="[open.spotify.com](https://open.spotify.com/embed/playlist/3gUptoFUZW0YxoBciSe41R)"
-    width="100%" height="152"></iframe>
-</section>
+  <!-- NOTES -->
+  <section id="notes" class="page" style="display:none;">
+    <h2>💌 Notes</h2>
+    <textarea id="noteInput" placeholder="Note pour ta coloc..."></textarea>
+    <button onclick="addNote()">Ajouter</button>
+    <ul id="noteList"></ul>
 
-<!-- SPORT -->
-<section id="sport" class="page" style="display:none;">
-  <h2>🧘‍♀️ Sport</h2>
-  <input id="sportInput" placeholder="Ajouter une séance...">
-  <button onclick="addSport()">Ajouter</button>
-  <ul id="sportList"></ul>
-</section>
+    <iframe
+      style="border-radius:12px"
+      src="[open.spotify.com](https://open.spotify.com/embed/playlist/3gUptoFUZW0YxoBciSe41R)"
+      width="100%" height="152"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+    </iframe>
+  </section>
 
-<!-- ACTIVITÉS -->
-<section id="activites" class="page" style="display:none;">
-  <h2>🎲 Activités</h2>
-  <p>Besoin d’une idée pour ce soir ?</p>
-  <button id="suggestButton">Inspire-moi ✨</button>
-  <div id="suggestionBox"></div>
-</section>
+  <!-- SPORT -->
+  <section id="sport" class="page" style="display:none;">
+    <h2>🧘‍♀️ Sport</h2>
+    <input id="sportInput" placeholder="Ajouter une séance...">
+    <button onclick="addSport()">Ajouter</button>
+    <ul id="sportList"></ul>
+  </section>
 
-<!-- GALERIE -->
-<section id="galerie" class="page" style="display:none;">
-  <h2>📸 Galerie</h2>
-  <input type="file" id="photoUpload" accept="image/*">
-  <div id="galleryGrid"></div>
-</section>
+  <!-- ACTIVITÉS -->
+  <section id="activites" class="page" style="display:none;">
+    <h2>🎲 Activités</h2>
+    <p>Besoin d’une idée pour ce soir ?</p>
+    <button id="suggestButton">Inspire-moi ✨</button>
+    <div id="suggestionBox"></div>
+  </section>
 
-<!-- ABSENCE -->
-<section id="absence" class="page" style="display:none;">
-  <h2>🏖️ Mode absence</h2>
-  <label><input type="checkbox" id="absentToggle"> Je suis absente</label>
-  <div id="presenceStatus"></div>
-</section>
+  <!-- GALERIE -->
+  <section id="galerie" class="page" style="display:none;">
+    <h2>📸 Galerie</h2>
+    <input type="file" id="photoUpload" accept="image/*">
+    <div id="galleryGrid"></div>
+  </section>
+
+  <!-- ABSENCE -->
+  <section id="absence" class="page" style="display:none;">
+    <h2>🏖️ Mode absence</h2>
+    <label>
+      <input type="checkbox" id="absentToggle"> Je suis absente
+    </label>
+    <div id="presenceStatus"></div>
+  </section>
 
 </main>
 
-<!-- FIREBASE -->
+<!-- ========== FIREBASE : LIENS OFFICIELS CORRECTS ========== -->
 <script src="[gstatic.com](https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js)"></script>
 <script src="[gstatic.com](https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js)"></script>
 <script src="[gstatic.com](https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js)"></script>
 <script src="[gstatic.com](https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js)"></script>
 
+<!-- CONFIGURATION FIREBASE -->
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDJksZ7yd4McJWI6B-PbeWFTQAfXt1tESU",
-  authDomain: "coloc-vibes.firebaseapp.com",
-  projectId: "coloc-vibes",
-  storageBucket: "coloc-vibes.firebasestorage.app",
-  messagingSenderId: "412175597941",
-  appId: "1:412175597941:web:de91af2d4ff6102f4c533c"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
-const storage = firebase.storage();
+  const firebaseConfig = {
+    apiKey: "AIzaSyDJksZ7yd4McJWI6B-PbeWFTQAfXt1tESU",
+    authDomain: "coloc-vibes.firebaseapp.com",
+    projectId: "coloc-vibes",
+    storageBucket: "coloc-vibes.firebasestorage.app",
+    messagingSenderId: "412175597941",
+    appId: "1:412175597941:web:de91af2d4ff6102f4c533c"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const storage = firebase.storage();
 </script>
 
+<!-- SCRIPT PRINCIPAL -->
 <script src="script.js"></script>
+
 </body>
 </html>
