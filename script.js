@@ -260,18 +260,24 @@ function listenEvents(key){
 function nextMonth(){currentDate.setMonth(currentDate.getMonth()+1);renderCalendar();}
 function prevMonth(){currentDate.setMonth(currentDate.getMonth()-1);renderCalendar();}
 /* ===========================
-   ACTIVITES
+   ACTIVITÉS – INSPIRE‑MOI
 =========================== */
 function initActivities(){
   const btn = document.getElementById("suggestButton");
   const box = document.getElementById("suggestionBox");
   if(!btn || !box) return;
-
-  const ideas = ["Spa 💅","Cinéma 🎬","Yoga 🧘‍♀️"];
-
-  btn.onclick = ()=>{
-    box.textContent = ideas[Math.floor(Math.random()*ideas.length)];
-  };
+  const ideas = [
+    "Soirée crêpes 🥞","Randonnée 🌄","Atelier DIY arts fantasy 🎨",
+    "Soirée spa maison 💅","Session jeu vidéo coop 🎮",
+    "Balade au marché 🌽","Pic‑nic au parc 🧺",
+    "Session photo galactique 📸","Cuisine de monde 🍜","Dessin de Lumia 🐈‍⬛"
+  ];
+  btn.addEventListener("click",()=>{
+    const idea=ideas[Math.floor(Math.random()*ideas.length)];
+    box.textContent=idea;
+    box.classList.add("fade");
+    setTimeout(()=>box.classList.remove("fade"),500);
+  });
 }
 
 /* ===========================
