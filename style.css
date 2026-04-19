@@ -299,3 +299,37 @@ body[data-theme="dark"] li {
   font-size:.8rem;
   letter-spacing:.3px;
 }
+
+/* === Apparition des sections au scroll === */
+.page {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.page.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === Apparition des cartes === */
+.card {
+  opacity: 0;
+  transform: translateY(25px) scale(0.98);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.card.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* === Apparition dynamique de la galerie === */
+.photo-card {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.photo-card.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
