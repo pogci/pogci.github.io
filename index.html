@@ -8,12 +8,21 @@
   <link rel="stylesheet" href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap)">
 </head>
 
-<body>
+<body data-theme="light">
 
 <header>
   <h1>🌿 Coloc Vibes</h1>
-  <p>Elodie & Cécilia</p>
+  <p>Élodie & Cécilia</p>
   <p id="currentUser"></p>
+
+  <div id="themeToggle" class="toggle">
+    <span>☀️</span>
+    <label class="switch">
+      <input type="checkbox" id="themeCheckbox">
+      <span class="slider"></span>
+    </label>
+    <span>🌙</span>
+  </div>
 </header>
 
 <!-- LOGIN -->
@@ -24,7 +33,6 @@
   <button onclick="login()">Se connecter</button>
 </div>
 
-<!-- MAIN APP -->
 <main id="app" style="display:none;">
 
 <nav>
@@ -70,11 +78,9 @@
   <textarea id="noteInput" placeholder="Note pour ta coloc..."></textarea>
   <button onclick="addNote()">Ajouter</button>
   <ul id="noteList"></ul>
-
   <iframe style="border-radius:12px"
     src="[open.spotify.com](https://open.spotify.com/embed/playlist/3gUptoFUZW0YxoBciSe41R)"
-    width="100%" height="152">
-  </iframe>
+    width="100%" height="152"></iframe>
 </section>
 
 <!-- SPORT -->
