@@ -1,22 +1,32 @@
 /* =======================
    NAVIGATION
 ======================= */
-
 function showPage(id) {
   document.querySelectorAll(".page").forEach(p => p.style.display = "none");
   document.getElementById(id).style.display = "block";
 }
 
 /* =======================
+   THEME SWITCH
+======================= */
+const themeCheckbox = document.getElementById("themeCheckbox");
+themeCheckbox.addEventListener("change", () => {
+  document.body.setAttribute("data-theme", themeCheckbox.checked ? "dark" : "light");
+  localStorage.setItem("theme", themeCheckbox.checked ? "dark" : "light");
+});
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+  document.body.setAttribute("data-theme", savedTheme);
+  themeCheckbox.checked = savedTheme === "dark";
+}
+
+/* =======================
    AUTH
 ======================= */
-
 function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-
-  auth.signInWithEmailAndPassword(email, password)
-    .catch(err => alert(err.message));
+  auth.signInWithEmailAndPassword(email, password).catch(err => alert(err.message));
 }
 
 auth.onAuthStateChanged(user => {
@@ -31,98 +41,60 @@ auth.onAuthStateChanged(user => {
 });
 
 /* =======================
-   UTILS
+   UTILS: COULEUR + AVATAR
 ======================= */
 function getUserColor(email) {
-  if (!email) return "#333";
-  if (email.toLowerCase().includes("elodie")) return "#9b5de5";
-  if (email.toLowerCase().includes("cecilia")) return "#2a9d8f";
-  return "#7c3aed";
+  if (!email) return "#7c3aed";
+  return email.toLowerCase().includes("elodie") ? "#9b5de5" :
+         email.toLowerCase().includes("cecilia") ? "#2a9d8f" : "#7c3aed";
+}
+
+function getUserAvatar(email) {
+  const name = email.includes("elodie") ? "E" : email.includes("cecilia") ? "C" : "?";
+  const cls = email.includes("elodie") ? "elodie" : email.includes("cecilia") ? "cecilia" : "";
+  return `<div class="avatar ${cls}">${name}</div>`;
 }
 
 /* =======================
-   COURSES
+   BASIC LIST (courses, notes, sport)
 ======================= */
-function addCourse() {
-  const text = document.getElementById("courseInput").value;
-  if (!text) return;
-
-  db.collection("courses").add({
-    text, user: auth.currentUser.email, created: Date.now()
-  });
-  document.getElementById("courseInput").value = "";
+function createItemHTML(id, user, text, collection) {
+  return `
+    <li>
+      ${getUserAvatar(user)}
+      <span><strong>${user.split("@")[0]}</strong> : ${text}</span>
+      <button onclick="db.collection('${collection}').doc('${id}').delete()">❌</button>
+    </li>`;
 }
 
-db.collection("courses").orderBy("created")
-.onSnapshot(snapshot => {
-  const list = document.getElementById("courseList");
-  list.innerHTML = "";
-  snapshot.forEach(doc => {
-    const d = doc.data();
-    list.innerHTML += `
-      <li style="color:${getUserColor(d.user)}">
-        <strong>${d.user}</strong> : ${d.text}
-        <button onclick="db.collection('courses').doc('${doc.id}').delete()">❌</button>
-      </li>`;
-  });
-});
-
-/* =======================
-   NOTES
-======================= */
-function addNote() {
-  const text = document.getElementById("noteInput").value;
+function addItem(inputId, collection) {
+  const text = document.getElementById(inputId).value.trim();
   if (!text) return;
-
-  db.collection("notes").add({
-    text, user: auth.currentUser.email, created: Date.now()
-  });
-  document.getElementById("noteInput").value = "";
+  db.collection(collection).add({ text, user: auth.currentUser.email, created: Date.now() });
+  document.getElementById(inputId).value = "";
 }
 
-db.collection("notes").orderBy("created")
-.onSnapshot(snapshot => {
-  const list = document.getElementById("noteList");
-  list.innerHTML = "";
-  snapshot.forEach(doc => {
-    const d = doc.data();
-    list.innerHTML += `
-      <li style="color:${getUserColor(d.user)}">
-        <strong>${d.user}</strong>: ${d.text}
-        <button onclick="db.collection('notes').doc('${doc.id}').delete()">❌</button>
-      </li>`;
+function listenList(collection, listId) {
+  db.collection(collection).orderBy("created").onSnapshot(snap => {
+    const list = document.getElementById(listId);
+    list.innerHTML = "";
+    snap.forEach(doc => {
+      const d = doc.data();
+      list.innerHTML += createItemHTML(doc.id, d.user, d.text, collection);
+    });
   });
-});
-
-/* =======================
-   SPORT
-======================= */
-function addSport() {
-  const text = document.getElementById("sportInput").value;
-  if (!text) return;
-
-  db.collection("sport").add({
-    text, user: auth.currentUser.email, created: Date.now()
-  });
-  document.getElementById("sportInput").value = "";
 }
 
-db.collection("sport").orderBy("created")
-.onSnapshot(snapshot => {
-  const list = document.getElementById("sportList");
-  list.innerHTML = "";
-  snapshot.forEach(doc => {
-    const d = doc.data();
-    list.innerHTML += `
-      <li style="color:${getUserColor(d.user)}">
-        <strong>${d.user}</strong>: ${d.text}
-        <button onclick="db.collection('sport').doc('${doc.id}').delete()">❌</button>
-      </li>`;
-  });
-});
+function addCourse() { addItem("courseInput", "courses"); }
+function addNote() { addItem("noteInput", "notes"); }
+function addSport() { addItem("sportInput", "sport"); }
+
+listenList("courses", "courseList");
+listenList("notes", "noteList");
+listenList("sport", "sportList");
 
 /* =======================
-   PLANTES & ARROSAGE
+   PLANTES
 ======================= */
 const plantes = [
   { name: "Barbara", lastWatered: null },
@@ -140,8 +112,7 @@ function renderPlants() {
     li.innerHTML = `
       <strong>${p.name}</strong>
       <small>${p.lastWatered ? "Arrosée le " + new Date(p.lastWatered).toLocaleDateString("fr-FR") : "Jamais arrosée"} 💧</small>
-      <button onclick="waterPlant('${p.name}')">Arroser</button>
-    `;
+      <button onclick="waterPlant('${p.name}')">Arroser</button>`;
     list.appendChild(li);
   });
 }
@@ -156,23 +127,18 @@ function waterPlant(name) {
 setInterval(() => {
   plantes.forEach(p => {
     if (!p.lastWatered) return;
-    const days = (Date.now() - p.lastWatered) / (1000*60*60*24);
+    const days = (Date.now() - p.lastWatered) / (1000 * 60 * 60 * 24);
     if (days > 3) new Notification(`💦 Pense à arroser ${p.name}`);
   });
-}, 1000*60*60*24);
+}, 1000 * 60 * 60 * 24);
 
 /* =======================
    ACTIVITÉS
 ======================= */
 const suggestions = [
-  "Soirée crêpes 🥞",
-  "Marathon de séries 🎬",
-  "Randonnée 🌄",
-  "Atelier DIY déco 🪴",
-  "Soirée spa maison 💅",
-  "Cours de danse 💃",
-  "Balade au marché 🌽",
-  "Picnic au parc 🧺",
+  "Soirée crêpes 🥞","Marathon de séries 🎬","Randonnée 🌄",
+  "Atelier DIY déco 🪴","Soirée spa 💅","Cours de danse 💃",
+  "Balade au marché 🌽","Picnic au parc 🧺"
 ];
 document.getElementById("suggestButton").onclick = () => {
   const s = suggestions[Math.floor(Math.random() * suggestions.length)];
@@ -192,9 +158,7 @@ document.getElementById("photoUpload").addEventListener("change", e=>{
   const ref = storage.ref("photos/" + Date.now() + "_" + file.name);
   ref.put(file).then(()=>{
     ref.getDownloadURL().then(url=>{
-      db.collection("photos").add({
-        url, user: auth.currentUser.email, created: Date.now()
-      });
+      db.collection("photos").add({ url, user: auth.currentUser.email, created: Date.now() });
     });
   });
 });
@@ -215,37 +179,39 @@ const absentToggle = document.getElementById("absentToggle");
 const presenceStatus = document.getElementById("presenceStatus");
 absentToggle.addEventListener("change", () => {
   db.collection("status").doc(auth.currentUser.email).set({
-    absent: absentToggle.checked,
-    updated: Date.now()
+    absent: absentToggle.checked, updated: Date.now()
   });
 });
 db.collection("status").onSnapshot(snap=>{
   presenceStatus.innerHTML="";
   snap.forEach(doc=>{
     const {absent} = doc.data();
-    presenceStatus.innerHTML += `<p><strong>${doc.id}</strong> est ${absent ? "🌴 absente" : "🏡 à la coloc"}</p>`;
+    presenceStatus.innerHTML += `
+      <p>${getUserAvatar(doc.id)} est ${absent ? "🌴 absente" : "🏡 à la coloc avec Lumia 🐈‍⬛"}</p>`;
   });
 });
 
 /* =======================
-   AGENDA (Calendrier)
+   CALENDRIER
 ======================= */
 let currentDate = new Date();
 
 function renderCalendar() {
   const cal = document.getElementById("calendar");
+  if (!cal) return;
   cal.innerHTML="";
-  document.getElementById("monthLabel").textContent = currentDate.toLocaleString("fr-FR",{month:"long",year:"numeric"});
+  document.getElementById("monthLabel").textContent =
+    currentDate.toLocaleString("fr-FR",{month:"long",year:"numeric"});
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-  const days = new Date(year, month+1, 0).getDate();
+  const days = new Date(year,month+1,0).getDate();
 
-  for (let i=1; i<=days; i++) {
+  for (let i=1;i<=days;i++){
     const key = `${year}-${month+1}-${i}`;
-    const day = document.createElement("div");
-    day.className = "day";
-    day.innerHTML = `
+    const d = document.createElement("div");
+    d.className="day";
+    d.innerHTML=`
       <div class="day-header">
         <strong>${i}</strong>
         <button onclick="openInput('${key}')">＋</button>
@@ -253,50 +219,44 @@ function renderCalendar() {
       <div id="input-${key}" style="display:none;">
         <input placeholder="Nouvel event" onkeydown="submitEvent(event,'${key}')">
       </div>
-      <div id="ev-${key}" class="events"></div>
-    `;
-    cal.appendChild(day);
-    setTimeout(()=> listenEvents(key), 0);
+      <div id="ev-${key}" class="events"></div>`;
+    cal.appendChild(d);
+    setTimeout(()=>listenEvents(key),0);
   }
 }
 
 function openInput(key){
-  const div = document.getElementById("input-"+key);
-  div.style.display = div.style.display==="none" ? "block" : "none";
+  const div=document.getElementById("input-"+key);
+  div.style.display=div.style.display==="none"?"block":"none";
 }
-
 function submitEvent(e,key){
   if(e.key==="Enter"){
-    const text = e.target.value;
-    if(!text) return;
+    const text=e.target.value; if(!text)return;
     db.collection("calendar").doc(key).collection("events").add({
-      text, user: auth.currentUser.email, created: Date.now()
+      text,user:auth.currentUser.email,created:Date.now()
     });
-    e.target.value="";
-    document.getElementById("input-"+key).style.display="none";
+    e.target.value=""; document.getElementById("input-"+key).style.display="none";
   }
 }
-
 function listenEvents(key){
-  const container = document.getElementById("ev-"+key);
-  if(!container) return;
+  const c=document.getElementById("ev-"+key);
+  if(!c)return;
   db.collection("calendar").doc(key).collection("events").orderBy("created")
-  .onSnapshot(snap=>{
-    container.innerHTML="";
-    snap.forEach(doc=>{
-      const d = doc.data();
-      container.innerHTML += `
+  .onSnapshot(s=>{
+    c.innerHTML="";
+    s.forEach(doc=>{
+      const d=doc.data();
+      c.innerHTML+=`
         <div class="event" style="border-left:4px solid ${getUserColor(d.user)}">
+          ${getUserAvatar(d.user)}
           <div>${d.text}<br><small>${d.user}</small></div>
           <button onclick="deleteEvent('${key}','${doc.id}')">❌</button>
         </div>`;
     });
   });
 }
-
 function deleteEvent(key,id){
   db.collection("calendar").doc(key).collection("events").doc(id).delete();
 }
-
-function nextMonth(){ currentDate.setMonth(currentDate.getMonth()+1); renderCalendar(); }
-function prevMonth(){ currentDate.setMonth(currentDate.getMonth()-1); renderCalendar(); }
+function nextMonth(){currentDate.setMonth(currentDate.getMonth()+1);renderCalendar();}
+function prevMonth(){currentDate.setMonth(currentDate.getMonth()-1);renderCalendar();}
