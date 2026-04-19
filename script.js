@@ -337,3 +337,50 @@ window.addEventListener('scroll',()=>{
     p.style.transform=`translateY(${offset*0.05}px)`;
   });
 });
+
+/* ===========================
+   OBSERVERS D'ANIMATION
+=========================== */
+
+// Transition smooth quand on change de section
+function activatePageAnimations() {
+  const pages = document.querySelectorAll(".page");
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add("visible");
+    });
+  },{threshold:0.2});
+  pages.forEach(p=>observer.observe(p));
+}
+
+// Apparition progressive des cartes
+function animateCards() {
+  const cards = document.querySelectorAll(".card");
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add("show");
+    });
+  },{threshold:0.1});
+  cards.forEach(c=>obs.observe(c));
+}
+
+// Apparition des images galerie
+function animateGallery() {
+  const photos = document.querySelectorAll(".photo-card");
+  photos.forEach((ph,i)=>{
+    setTimeout(()=>ph.classList.add("visible"),100*i);
+  });
+}
+
+// Lancer tout après chargement initial
+window.addEventListener("load",()=>{
+  activatePageAnimations();
+  animateCards();
+});
+
+// Relancer l’animation en cas de rechargement ou ajout de photos
+const galleryGrid = document.getElementById("galleryGrid");
+if (galleryGrid) {
+  const mo = new MutationObserver(animateGallery);
+  mo.observe(galleryGrid,{childList:true});
+}
