@@ -3,26 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Coloc Vibes ✨ Aurora Edition</title>
-
-  <!-- FONTS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600&family=Audiowide&display=swap)"
     rel="stylesheet">
-
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body data-theme="light">
 
-<!-- CANVAS AURORA -->
 <canvas id="auroraCanvas"></canvas>
 
 <header>
   <h1 class="logo">🌿 Coloc Vibes</h1>
   <p id="currentUser"></p>
-
   <div id="themeToggle" class="toggle">
     <span>☀️</span>
     <label class="switch">
@@ -33,8 +28,7 @@
   </div>
 </header>
 
-<!-- LOGIN -->
-<div id="loginPage" class="card login-card glass-strong">
+<div id="loginPage" class="card login-card">
   <h2>🔐 Connexion</h2>
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Mot de passe">
@@ -43,35 +37,31 @@
 
 <main id="app" style="display:none;">
 
-<!-- NAVBAR GALAXY GLASS -->
-<nav id="navbar" class="galaxy-glass">
-  <button onclick="showPage('dashboard')">🏠</button>
-  <button onclick="showPage('courses')">🛒</button>
-  <button onclick="showPage('agenda')">📆</button>
-  <button onclick="showPage('plantes')">🌱</button>
-  <button onclick="showPage('notes')">💌</button>
-  <button onclick="showPage('sport')">🧘‍♀️</button>
-  <button onclick="showPage('activites')">🎲</button>
-  <button onclick="showPage('galerie')">📸</button>
-  <button onclick="showPage('absence')">🏖</button>
+<nav id="navbar">
+  <button onclick="showPage('dashboard')" title="Dashboard">🏠</button>
+  <button onclick="showPage('courses')" title="Courses">🛒</button>
+  <button onclick="showPage('agenda')" title="Agenda">📆</button>
+  <button onclick="showPage('plantes')" title="Plantes">🌱</button>
+  <button onclick="showPage('notes')" title="Notes">💌</button>
+  <button onclick="showPage('sport')" title="Sport">🧘‍♀️</button>
+  <button onclick="showPage('activites')" title="Activités">🎲</button>
+  <button onclick="showPage('galerie')" title="Galerie">📸</button>
+  <button onclick="showPage('absence')" title="Absence">🏖️</button>
 </nav>
 
 <!-- DASHBOARD -->
-<section id="dashboard" class="page">
+<section id="dashboard" class="page active-page">
   <h2>🏠 Tableau de bord</h2>
-
   <div class="dash-grid">
-    <div class="card glass floating">
+    <div class="card floating">
       <h3 id="greeting">Bonjour ✨</h3>
       <p>🌤️ 25°C — Ciel clair sur la coloc</p>
     </div>
-
-    <div class="card glass floating">
+    <div class="card floating">
       <h3>🎲 Activité du jour</h3>
       <p id="dailyActivity"></p>
     </div>
-
-    <div class="card glass floating summary">
+    <div class="card floating summary">
       <h3>📋 Résumé</h3>
       <ul>
         <li>Courses : <span id="summaryCourses">0</span></li>
@@ -93,7 +83,7 @@
 <!-- AGENDA -->
 <section id="agenda" class="page" style="display:none;">
   <h2>📅 Agenda</h2>
-  <div>
+  <div class="cal-nav">
     <button onclick="prevMonth()">⬅</button>
     <span id="monthLabel"></span>
     <button onclick="nextMonth()">➡</button>
@@ -113,8 +103,7 @@
   <textarea id="noteInput" placeholder="Note pour ta coloc..."></textarea>
   <button onclick="addNote()">Ajouter</button>
   <ul id="noteList"></ul>
-
-  <iframe style="border-radius:12px"
+  <iframe style="border-radius:12px;margin-top:1rem;"
     src="https://open.spotify.com/embed/playlist/3gUptoFUZW0YxoBciSe41R"
     width="100%" height="152"></iframe>
 </section>
@@ -131,28 +120,33 @@
 <section id="activites" class="page" style="display:none;">
   <h2>🎲 Activités</h2>
   <button id="suggestButton">Inspire-moi ✨</button>
-  <div id="suggestionBox"></div>
+  <div id="suggestionBox" class="suggestion-box"></div>
 </section>
 
 <!-- GALERIE -->
 <section id="galerie" class="page" style="display:none;">
   <h2>📸 Galerie</h2>
-  <input type="file" id="photoUpload" accept="image/*">
+  <label class="upload-label">
+    📁 Choisir une photo
+    <input type="file" id="photoUpload" accept="image/*">
+  </label>
+  <p id="uploadStatus"></p>
   <div id="galleryGrid"></div>
 </section>
 
 <!-- ABSENCE -->
 <section id="absence" class="page" style="display:none;">
-  <h2>🏖 Mode absence</h2>
-  <label><input type="checkbox" id="absentToggle"> Je suis absente</label>
+  <h2>🏖️ Mode absence</h2>
+  <label class="toggle-absence">
+    <input type="checkbox" id="absentToggle"> Je suis absente 🌴
+  </label>
   <div id="presenceStatus"></div>
 </section>
 
 </main>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js)"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
