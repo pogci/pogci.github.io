@@ -1,176 +1,264 @@
-/* ==== Neon Premium Soft Theme ==== */
+/* =============================
+   COLOC VIBES – FRENCH TOUCH AURORA
+   ============================= */
+
 :root {
   --violet: #a855f7;
   --blue: #4f46e5;
+  --pink: #ec4899;
   --cyan: #06b6d4;
-  --dark-bg: #0d0d15;
-  --light-bg: #f5f5ff;
-  --glass: rgba(255,255,255,0.08);
+  --bg-dark: #0d0d15;
+  --bg-light: #f5f5ff;
+  --glass-light: rgba(255,255,255,0.3);
+  --glass-dark: rgba(10,10,20,0.6);
+  --shadow-neon: 0 0 20px rgba(168,85,247,0.4);
+  --shadow-glow: 0 0 40px rgba(168,85,247,0.25);
 }
 
+/* RESET */
 *, *::before, *::after {
   box-sizing: border-box;
-}
-
-body {
   margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
   font-family: "Exo 2", sans-serif;
-  line-height: 1.5;
-  background: var(--light-bg);
-  color: #222;
-  transition: background 0.5s, color 0.5s;
   overflow-x: hidden;
+  scroll-behavior: smooth;
+  background: var(--bg-light);
+  color: #111;
 }
 
-/* DARK THEME */
+/* THEME DARK */
 body[data-theme="dark"] {
-  background: var(--dark-bg);
-  color: #e5e5f5;
+  background: var(--bg-dark);
+  color: #e7e9ff;
 }
 
-/* HEADER ANIMATION */
+/* CANVAS BACKGROUND */
+#auroraCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.45;
+}
+
+/* HEADER */
 header {
   text-align: center;
-  padding: 2rem 1rem 1rem;
-  position: relative;
-  animation: fadeIn 1s ease forwards;
-  background: linear-gradient(120deg, var(--violet), var(--blue), var(--cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.logo {
-  font-family: "Audiowide", cursive;
-  font-size: 2.2rem;
+  padding: 3rem 1rem 1rem;
+  animation: fadeIn 1.2s ease-out forwards;
 }
 
-/* NAVBAR */
+header .logo {
+  font-family: "Audiowide", cursive;
+  font-size: 2.4rem;
+  background: linear-gradient(120deg, var(--pink), var(--violet), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  text-shadow: 0 0 18px rgba(255,255,255,0.2);
+}
+
+#currentUser {
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+  opacity: 0.7;
+}
+
+/* SWITCH THEME */
+.toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .4rem;
+  font-size: 1.1rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+.switch input { opacity:0; width:0; height:0;}
+.slider {
+  position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;
+  background:#ccc;border-radius:24px;transition:.3s;
+}
+.slider::before {
+  position:absolute;content:"";height:18px;width:18px;left:4px;bottom:3px;
+  background:white;border-radius:50%;transition:.3s;
+}
+input:checked + .slider {
+  background:var(--violet);
+}
+input:checked + .slider:before { transform:translateX(22px); }
+
+/* NAVBAR GALAXY GLASS */
 #navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  backdrop-filter: blur(14px);
-  background: rgba(255,255,255,0.1);
-  border-bottom: 1px solid rgba(255,255,255,0.15);
+  height: 56px;
+  backdrop-filter: blur(25px);
+  background: linear-gradient(135deg, rgba(20,20,30,0.6), rgba(60,0,80,0.4));
+  border-bottom: 1px solid rgba(255,255,255,0.1);
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.6rem;
-  z-index: 100;
-}
-#navbar button {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: white;
-  padding: 0.6rem 1.1rem;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  font-weight: 500;
-}
-#navbar button:hover {
-  background: var(--violet);
-  box-shadow: 0 0 10px var(--violet);
+  gap: .6rem;
+  z-index: 50;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.3);
 }
 
-/* PAGES */
-main { margin-top: 70px; }
+#navbar button {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 1.1rem;
+  border-radius: 14px;
+  padding: .3rem .8rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-shadow: 0 0 5px rgba(255,255,255,0.3);
+}
+#navbar button:hover {
+  background: linear-gradient(135deg,var(--violet),var(--blue));
+  box-shadow: 0 0 18px rgba(168,85,247,0.7);
+  transform: translateY(-2px);
+}
+
+/* LAYOUT */
+main {
+  margin-top: 70px;
+  perspective: 1000px;
+}
 .page {
   padding: 2rem 1rem;
   max-width: 900px;
   margin: auto;
-  animation: fadeUp 0.4s ease;
-}
-
-/* CARDS */
-.card {
-  background: rgba(255,255,255,0.6);
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin: 1.2rem auto;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-}
-body[data-theme="dark"] .card {
-  background: var(--glass);
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 0 10px rgba(168,85,247,0.2);
+  animation: fadeUp 0.8s ease;
+  transform-style: preserve-3d;
 }
 
 /* DASHBOARD GRID */
 .dash-grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
 }
-.glass {
-  backdrop-filter: blur(10px);
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+.summary ul { list-style: none; padding: 0; }
+
+/* CARD STYLES */
+.card {
+  background: var(--glass-light);
+  backdrop-filter: blur(18px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: inherit;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all .3s ease;
 }
-.summary ul {
-  list-style: none;
-  padding: 0;
+body[data-theme="dark"] .card {
+  background: var(--glass-dark);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 20px rgba(0,0,0,0.4),
+              0 0 30px rgba(168,85,247,0.15);
 }
 
-/* INPUTS & BUTTONS */
+.card.floating:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25),
+              0 0 20px rgba(168,85,247,0.4);
+}
+
+/* INPUTS / BUTTONS */
 input, textarea {
   width: 100%;
   padding: 0.8rem;
   border-radius: 12px;
   border: none;
-  margin: 0.4rem 0;
+  margin: 0.5rem 0;
+  background: rgba(255,255,255,0.7);
+}
+body[data-theme="dark"] input,
+body[data-theme="dark"] textarea {
+  background: rgba(50,50,75,0.6);
+  color: #fff;
 }
 button {
-  font-family: inherit;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--violet), var(--blue));
-  color: white;
-  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg,var(--violet),var(--cyan));
+  color: #fff;
+  padding: 0.7rem 1.2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: all .3s ease;
 }
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(168,85,247,0.4);
+  box-shadow: 0 8px 25px rgba(168,85,247,0.5), inset 0 0 6px rgba(255,255,255,0.2);
 }
 
-/* LISTS */
+/* LIST ITEMS */
 ul { list-style: none; padding: 0; }
 li {
-  background: rgba(255,255,255,0.15);
-  border-radius: 12px;
-  padding: 0.8rem;
-  margin-bottom: 0.6rem;
+  background: rgba(255,255,255,0.3);
+  margin: .6rem 0;
+  padding: .6rem;
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+body[data-theme="dark"] li {
+  background: rgba(50,50,70,0.6);
+}
 
-/* CALENDAR BOXES */
+/* CALENDAR */
 #calendar {
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(100px,1fr));
-  gap: 6px;
+  grid-template-columns: repeat(auto-fill,minmax(120px,1fr));
+  gap: 8px;
+}
+#calendar .card {
+  padding: .8rem;
 }
 
-/* FANCIER EFFECTS */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* LOGIN PAGE CENTER */
+.login-card {
+  margin-top: 15vh;
+  text-align: center;
+  max-width: 380px;
 }
+
+/* ANIMATIONS */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {opacity:0; transform: translateY(15px);}
+  to {opacity:1; transform: translateY(0);}
+}
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(-10px);}
+  to {opacity:1; transform:translateY(0);}
 }
 
 /* RESPONSIVE */
 @media (max-width:700px){
-  .logo { font-size:1.8rem; }
-  #navbar { flex-wrap: nowrap; overflow-x:auto; }
-  #navbar button { flex:none; white-space:nowrap; }
-  .page { padding:1.2rem; }
+  #navbar {
+    justify-content: space-around;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .page { padding: 1rem; }
+  .logo { font-size: 1.8rem; }
+  button { font-size: 0.9rem; }
 }
