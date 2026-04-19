@@ -75,7 +75,7 @@ function getUserColor(email){
    DASHBOARD
 =========================== */
 function renderDashboard(){
-  const ideas=[
+  const ideas = [
     "Soirée crêpes 🥞","Marathon de séries 🎬","Randonnée 🌄",
     "Atelier DIY déco 🪴","Soirée spa 💅","Cours de danse 💃",
     "Balade au marché 🌽","Picnic au parc 🧺","Soirée jeux vidéo 🎮",
@@ -107,7 +107,9 @@ function addItem(inputId, collection){
   const val = document.getElementById(inputId).value.trim();
   if(!val) return;
   db.collection(collection).add({
-    text:val, user:auth.currentUser.email, created:Date.now()
+    text: val,
+    user: auth.currentUser.email,
+    created: Date.now()
   });
   document.getElementById(inputId).value = "";
 }
@@ -132,19 +134,20 @@ function listenList(coll, listId){
 /* ===========================
    PLANTES
 =========================== */
-const plantes=[
-  {name:"Barbara",lastWatered:null},
-  {name:"Calypso",lastWatered:null},
-  {name:"Aretha",lastWatered:null},
-  {name:"Tina",lastWatered:null},
-  {name:"Adèle",lastWatered:null},
+const plantes = [
+  {name:"Barbara", lastWatered:null},
+  {name:"Calypso", lastWatered:null},
+  {name:"Aretha",  lastWatered:null},
+  {name:"Tina",    lastWatered:null},
+  {name:"Adèle",   lastWatered:null},
 ];
+
 function renderPlants(){
   const list = document.getElementById("plantList");
   list.innerHTML = "";
   plantes.forEach(p=>{
     const li = document.createElement("li");
-    li.style.borderLeft = `4px solid #00ff88`;
+    li.style.borderLeft = "4px solid #00ff88";
     li.innerHTML = `
       <span>
         <strong>${p.name}</strong><br>
@@ -157,6 +160,7 @@ function renderPlants(){
     list.appendChild(li);
   });
 }
+
 function waterPlant(name){
   const plant = plantes.find(p=>p.name===name);
   plant.lastWatered = Date.now();
@@ -165,15 +169,14 @@ function waterPlant(name){
 
 /* ===========================
    CALENDRIER
-   → Utilise .cal-day (pas .card)
-   pour éviter le bug d'opacité
 =========================== */
 let currentDate = new Date();
+
 function renderCalendar(){
   const cal = document.getElementById("calendar");
   cal.innerHTML = "";
   document.getElementById("monthLabel").textContent =
-    currentDate.toLocaleString("fr-FR",{month:"long",year:"numeric"});
+    currentDate.toLocaleString("fr-FR",{month:"long", year:"numeric"});
 
   const y = currentDate.getFullYear();
   const m = currentDate.getMonth();
@@ -192,15 +195,20 @@ function renderCalendar(){
     setTimeout(()=>listenEvents(key), 0);
   }
 }
+
 function submitEvent(e, key){
-  if(e.key==="Enter"){
+  if(e.key === "Enter"){
     const val = e.target.value.trim();
     if(!val) return;
-    db.collection("calendar").doc(key).collection("events")
-      .add({text:val, user:auth.currentUser.email, created:Date.now()});
+    db.collection("calendar").doc(key).collection("events").add({
+      text: val,
+      user: auth.currentUser.email,
+      created: Date.now()
+    });
     e.target.value = "";
   }
 }
+
 function listenEvents(key){
   const div = document.getElementById("ev-"+key);
   if(!div) return;
@@ -211,14 +219,25 @@ function listenEvents(key){
       s.forEach(doc=>{
         const d = doc.data();
         div.innerHTML += `
-          <div style="font-size:.75rem;border-left:3px solid ${getUserColor(d.user)};padding-left:4px;margin-top:2px;">
+          <div style="
+            font-size:.75rem;
+            border-left:3px solid ${getUserColor(d.user)};
+            padding-left:4px;
+            margin-top:2px;">
             ${d.text}
           </div>`;
       });
     });
 }
-function nextMonth(){ currentDate.setMonth(currentDate.getMonth()+1); renderCalendar(); }
-function prevMonth(){ currentDate.setMonth(currentDate.getMonth()-1); renderCalendar(); }
+
+function nextMonth(){
+  currentDate.setMonth(currentDate.getMonth()+1);
+  renderCalendar();
+}
+function prevMonth(){
+  currentDate.setMonth(currentDate.getMonth()-1);
+  renderCalendar();
+}
 
 /* ===========================
    ACTIVITÉS
@@ -226,14 +245,15 @@ function prevMonth(){ currentDate.setMonth(currentDate.getMonth()-1); renderCale
 function initActivities(){
   const btn = document.getElementById("suggestButton");
   const box = document.getElementById("suggestionBox");
-  if(!btn||!box) return;
+  if(!btn || !box) return;
 
-  const ideas=[
+  const ideas = [
     "Soirée crêpes 🥞","Randonnée 🌄","Atelier DIY fantasy 🎨",
     "Soirée spa maison 💅","Session jeu vidéo coop 🎮",
     "Balade au marché 🌽","Picnic au parc 🧺",
-    "Session photo 📸","Cuisine du monde 🍜","Dessin de Lumia 🐈‍⬛",
-    "Soirée Karaoké 🎤","Film en plein air 🌙"
+    "Session photo 📸","Cuisine du monde 🍜",
+    "Dessin de Lumia 🐈","Soirée karaoké 🎤",
+    "Film en plein air 🌙"
   ];
 
   btn.addEventListener("click",()=>{
@@ -250,25 +270,25 @@ function initActivities(){
 =========================== */
 function initGallery(){
   const gallery = document.getElementById("galleryGrid");
-  const upload = document.getElementById("photoUpload");
-  const status = document.getElementById("uploadStatus");
-  if(!gallery||!upload) return;
+  const upload  = document.getElementById("photoUpload");
+  const status  = document.getElementById("uploadStatus");
+  if(!gallery || !upload) return;
 
   upload.addEventListener("change", e=>{
     const file = e.target.files[0];
-    if(!file||!auth.currentUser) return;
+    if(!file || !auth.currentUser) return;
 
     status.textContent = "⏳ Upload en cours...";
 
-    const filename = `${Date.now()}_${file.name}`;
-    const ref = storage.ref(`photos/${auth.currentUser.uid}/${filename}`);
+    const filename = Date.now() + "_" + file.name;
+    const ref = storage.ref("photos/" + auth.currentUser.uid + "/" + filename);
 
     ref.put(file)
       .then(()=> ref.getDownloadURL())
       .then(url=>{
         return db.collection("photos").add({
-          url,
-          user: auth.currentUser.email,
+          url:     url,
+          user:    auth.currentUser.email,
           created: Date.now()
         });
       })
@@ -286,17 +306,23 @@ function initGallery(){
   db.collection("photos").orderBy("created","desc").onSnapshot(snap=>{
     gallery.innerHTML = "";
     snap.forEach((doc, i)=>{
-      const d = doc.data();
+      const d   = doc.data();
+      const nom = d.user.split("@")[0];
       const div = document.createElement("div");
       div.className = "photo-card";
+
       const isOwner = auth.currentUser && d.user === auth.currentUser.email;
-      div.innerHTML = `
-        <div class="photo-wrapper">
-          ${isOwner ? `<button class="del-photo" onclick="deletePhoto('${doc.id}','${d.url}')">✕</button>` : ""}
-          <img src="${d.url}" alt="photo de ${d.user.split("@")[0]}">
-        </div>
-        <small>${d.user.split("@")[0]}</small>
-      `;
+      const delBtn  = isOwner
+        ? '<button class="del-photo" onclick="deletePhoto(\'' + doc.id + '\',\'' + d.url + '\')">✕</button>'
+        : "";
+
+      div.innerHTML =
+        '<div class="photo-wrapper">' +
+          delBtn +
+          '<img src="' + d.url + '" alt="photo de ' + nom + '">' +
+        '</div>' +
+        '<small>' + nom + '</small>';
+
       gallery.appendChild(div);
       setTimeout(()=> div.classList.add("visible"), 80*i);
     });
@@ -315,11 +341,11 @@ function deletePhoto(id, url){
 function initAbsence(){
   const toggle = document.getElementById("absentToggle");
   const status = document.getElementById("presenceStatus");
-  if(!toggle||!status) return;
+  if(!toggle || !status) return;
 
   toggle.addEventListener("change",()=>{
     db.collection("status").doc(auth.currentUser.email).set({
-      absent: toggle.checked,
+      absent:  toggle.checked,
       updated: Date.now()
     });
   });
@@ -327,12 +353,11 @@ function initAbsence(){
   db.collection("status").onSnapshot(snap=>{
     status.innerHTML = "";
     snap.forEach(doc=>{
-      const {absent} = doc.data();
+      const absent = doc.data().absent;
       const p = document.createElement("p");
-      p.innerHTML = `
-        <strong>${doc.id.split("@")[0]}</strong>
-        ${absent ? "🌴 est absente" : "🏡 est à la coloc avec Lumia 🐈‍⬛"}
-      `;
+      p.innerHTML =
+        "<strong>" + doc.id.split("@")[0] + "</strong> " +
+        (absent ? "🌴 est absente" : "🏡 est à la coloc avec Lumia 🐈");
       status.appendChild(p);
     });
   });
@@ -340,22 +365,19 @@ function initAbsence(){
 
 /* ===========================
    AURORA CANVAS
-   Blobs très colorés + rayons
-   Réactif à la souris
 =========================== */
 const canvas = document.getElementById("auroraCanvas");
 if(canvas){
   const ctx = canvas.getContext("2d");
   let w, h, mouse = {x:0, y:0};
 
-  // Palette vive French Touch
   const palette = [
-    {h:280, s:100, l:60},  // violet
-    {h:320, s:100, l:55},  // fuchsia
-    {h:190, s:100, l:55},  // cyan
-    {h:240, s:100, l:60},  // bleu
-    {h:20,  s:100, l:55},  // orange
-    {h:150, s:100, l:50},  // vert néon
+    {h:280, s:100, l:60},
+    {h:320, s:100, l:55},
+    {h:190, s:100, l:55},
+    {h:240, s:100, l:60},
+    {h:20,  s:100, l:55},
+    {h:150, s:100, l:50},
   ];
 
   const blobs = [];
@@ -371,32 +393,33 @@ if(canvas){
   function createBlob(idx){
     const c = palette[idx % palette.length];
     return {
-      x: Math.random()*w,
-      y: Math.random()*h,
-      r: Math.random()*220 + 160,
-      hue: c.h + (Math.random()*30 - 15),
-      sat: c.s,
-      lit: c.l,
+      x:     Math.random()*w,
+      y:     Math.random()*h,
+      r:     Math.random()*220 + 160,
+      hue:   c.h + (Math.random()*30 - 15),
+      sat:   c.s,
+      lit:   c.l,
       alpha: 0.55 + Math.random()*0.2,
-      vx: (Math.random()-.5)*0.35,
-      vy: (Math.random()-.5)*0.35,
+      vx:    (Math.random()-.5)*0.35,
+      vy:    (Math.random()-.5)*0.35,
     };
   }
+
   function createRay(){
     const c = palette[Math.floor(Math.random()*palette.length)];
     return {
-      x: Math.random()*w,
-      y: Math.random()*h,
-      len: Math.random()*(w/3) + w/8,
+      x:     Math.random()*w,
+      y:     Math.random()*h,
+      len:   Math.random()*(w/3) + w/8,
       angle: Math.random()*Math.PI*2,
       width: Math.random()*3 + 0.5,
-      hue: c.h,
+      hue:   c.h,
       alpha: 0.2 + Math.random()*0.15,
     };
   }
 
-  for(let i=0;i<6;i++) blobs.push(createBlob(i));
-  for(let i=0;i<8;i++) rays.push(createRay());
+  for(let i=0; i<6; i++) blobs.push(createBlob(i));
+  for(let i=0; i<8; i++) rays.push(createRay());
 
   window.addEventListener("mousemove", e=>{
     mouse.x = e.clientX;
@@ -406,12 +429,12 @@ if(canvas){
   function draw(){
     ctx.clearRect(0,0,w,h);
 
-    // Fond de base légèrement teinté
-    const isDark = document.body.getAttribute("data-theme")==="dark";
-    ctx.fillStyle = isDark ? "rgba(6,6,17,0.3)" : "rgba(243,244,255,0.25)";
+    const isDark = document.body.getAttribute("data-theme") === "dark";
+    ctx.fillStyle = isDark
+      ? "rgba(6,6,17,0.3)"
+      : "rgba(243,244,255,0.25)";
     ctx.fillRect(0,0,w,h);
 
-    // RAYONS
     rays.forEach(r=>{
       r.x += Math.cos(r.angle)*0.4;
       r.y += Math.sin(r.angle)*0.4;
@@ -421,7 +444,50 @@ if(canvas){
       }
       const x2 = r.x + Math.cos(r.angle)*r.len;
       const y2 = r.y + Math.sin(r.angle)*r.len;
-      const g = ctx.createLinearGradient(r.x,r.y,x2,y2);
-      g.addColorStop(0, "transparent");
-      g.addColorStop(0.5, `hsla(${r.hue},100%,65%,${r.alpha})`);
-      g.add
+      const g  = ctx.createLinearGradient(r.x,r.y,x2,y2);
+      g.addColorStop(0,   "transparent");
+      g.addColorStop(0.5, "hsla("+r.hue+",100%,65%,"+r.alpha+")");
+      g.addColorStop(1,   "transparent");
+      ctx.strokeStyle = g;
+      ctx.lineWidth   = r.width;
+      ctx.beginPath();
+      ctx.moveTo(r.x, r.y);
+      ctx.lineTo(x2,  y2);
+      ctx.stroke();
+    });
+
+    blobs.forEach(b=>{
+      const mx = mouse.x || w/2;
+      const my = mouse.y || h/2;
+      b.x += b.vx + (mx - b.x)*0.00008;
+      b.y += b.vy + (my - b.y)*0.00008;
+
+      if(b.x < -b.r) b.x = w+b.r;
+      if(b.x > w+b.r) b.x = -b.r;
+      if(b.y < -b.r) b.y = h+b.r;
+      if(b.y > h+b.r) b.y = -b.r;
+
+      const g = ctx.createRadialGradient(b.x,b.y,0, b.x,b.y,b.r);
+      g.addColorStop(0,   "hsla("+b.hue+","+b.sat+"%,"+b.lit+"%,"+b.alpha+")");
+      g.addColorStop(0.6, "hsla("+b.hue+","+b.sat+"%,"+b.lit+"%,"+(b.alpha*0.4)+")");
+      g.addColorStop(1,   "transparent");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ===========================
+   PARALLAX
+=========================== */
+window.addEventListener("scroll",()=>{
+  const offset = window.scrollY;
+  document.querySelectorAll(".card.floating").forEach(c=>{
+    c.style.transform = "translateY(" + (offset*0.02) + "px)";
+  });
+});
