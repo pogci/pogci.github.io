@@ -216,37 +216,49 @@ function renderPlants(){
 }
 
 /* ===========================
-   CALENDAR
+   CALENDRIER
 =========================== */
-let currentDate = new Date();
-
+let currentDate=new Date();
 function renderCalendar(){
-  const cal = document.getElementById("calendar");
-  if(!cal) return;
-
-  cal.innerHTML = "";
-
-  const y = currentDate.getFullYear();
-  const m = currentDate.getMonth();
-  const days = new Date(y, m+1, 0).getDate();
-
+  const cal=document.getElementById("calendar");
+  cal.innerHTML="";
+  document.getElementById("monthLabel").textContent=
+    currentDate.toLocaleString("fr-FR",{month:"long",year:"numeric"});
+  const y=currentDate.getFullYear(),m=currentDate.getMonth();
+  const days=new Date(y,m+1,0).getDate();
   for(let i=1;i<=days;i++){
-    const div = document.createElement("div");
-    div.textContent = i;
+    const key=`${y}-${m+1}-${i}`;
+    const div=document.createElement("div");
+    div.className="card glass";
+    div.innerHTML=`<strong>${i}</strong>
+      <input placeholder="Nouvel event" onkeydown="submitEvent(event,'${key}')">
+      <div id="ev-${key}"></div>`;
     cal.appendChild(div);
+    setTimeout(()=>listenEvents(key),0);
   }
 }
-
-function nextMonth(){
-  currentDate.setMonth(currentDate.getMonth()+1);
-  renderCalendar();
+function submitEvent(e,key){
+  if(e.key==="Enter"){
+    const val=e.target.value.trim();
+    if(!val)return;
+    db.collection("calendar").doc(key).collection("events")
+      .add({text:val,user:auth.currentUser.email,created:Date.now()});
+    e.target.value="";
+  }
 }
-
-function prevMonth(){
-  currentDate.setMonth(currentDate.getMonth()-1);
-  renderCalendar();
+function listenEvents(key){
+  const div=document.getElementById("ev-"+key);
+  db.collection("calendar").doc(key).collection("events").orderBy("created")
+    .onSnapshot(s=>{
+      div.innerHTML="";
+      s.forEach(doc=>{
+        const d=doc.data();
+        div.innerHTML+=`<div style="font-size:.8rem;border-left:3px solid ${getUserColor(d.user)};padding-left:4px;">${d.text}</div>`;
+      });
+    });
 }
-
+function nextMonth(){currentDate.setMonth(currentDate.getMonth()+1);renderCalendar();}
+function prevMonth(){currentDate.setMonth(currentDate.getMonth()-1);renderCalendar();}
 /* ===========================
    ACTIVITES
 =========================== */
