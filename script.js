@@ -1,3 +1,8 @@
+
+/* =======================
+   NAVIGATION
+======================= */
+
 function showPage(id) {
   document.querySelectorAll(".page").forEach(p => {
     p.style.display = "none";
@@ -14,10 +19,6 @@ function login() {
   const password = document.getElementById("password").value;
 
   auth.signInWithEmailAndPassword(email, password)
-    .then(user => {
-      document.getElementById("loginPage").style.display = "none";
-      document.getElementById("app").style.display = "block";
-    })
     .catch(err => alert(err.message));
 }
 
@@ -34,33 +35,75 @@ auth.onAuthStateChanged(user => {
 ======================= */
 
 function addCourse() {
+  const text = document.getElementById("courseInput").value;
+  if (!text) return;
+
   db.collection("courses").add({
-    text: document.getElementById("courseInput").value,
+    text,
     user: auth.currentUser.email,
     created: Date.now()
   });
+
+  document.getElementById("courseInput").value = "";
 }
 
 db.collection("courses").orderBy("created")
-.onSnapshot(snap => {
+.onSnapshot(snapshot => {
   let list = document.getElementById("courseList");
   list.innerHTML = "";
-  snap.forEach(d => {
-    let x = d.data();
-    list.innerHTML += `<li><strong>${x.user}</strong> : ${x.text}</li>`;
+
+  snapshot.forEach(doc => {
+    let d = doc.data();
+
+    list.innerHTML += `
+      <li>
+        <strong>${d.user}</strong> : ${d.text}
+        <button onclick="deleteCourse('${doc.id}')">❌</button>
+      </li>
+    `;
   });
 });
+
+function deleteCourse(id) {
+  db.collection("courses").doc(id).delete();
+}
 
 /* =======================
    NOTES
 ======================= */
 
 function addNote() {
+  const text = document.getElementById("noteInput").value;
+  if (!text) return;
+
   db.collection("notes").add({
-    text: document.getElementById("noteInput").value,
+    text,
     user: auth.currentUser.email,
     created: Date.now()
   });
+
+  document.getElementById("noteInput").value = "";
+}
+
+db.collection("notes").orderBy("created")
+.onSnapshot(snapshot => {
+  let list = document.getElementById("noteList");
+  list.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    let d = doc.data();
+
+    list.innerHTML += `
+      <li>
+        <strong>${d.user}</strong> : ${d.text}
+        <button onclick="deleteNote('${doc.id}')">❌</button>
+      </li>
+    `;
+  });
+});
+
+function deleteNote(id) {
+  db.collection("notes").doc(id).delete();
 }
 
 /* =======================
@@ -68,14 +111,41 @@ function addNote() {
 ======================= */
 
 function addSport() {
+  const text = document.getElementById("sportInput").value;
+  if (!text) return;
+
   db.collection("sport").add({
-    text: document.getElementById("sportInput").value,
-    user: auth.currentUser.email
+    text,
+    user: auth.currentUser.email,
+    created: Date.now()
   });
+
+  document.getElementById("sportInput").value = "";
+}
+
+db.collection("sport").orderBy("created")
+.onSnapshot(snapshot => {
+  let list = document.getElementById("sportList");
+  list.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    let d = doc.data();
+
+    list.innerHTML += `
+      <li>
+        <strong>${d.user}</strong> : ${d.text}
+        <button onclick="deleteSport('${doc.id}')">❌</button>
+      </li>
+    `;
+  });
+});
+
+function deleteSport(id) {
+  db.collection("sport").doc(id).delete();
 }
 
 /* =======================
-   PLANTES (local simple)
+   PLANTES (simple)
 ======================= */
 
 const plantes = ["Barbara","Calypso","Aretha","Tina","Adèle"];
@@ -84,12 +154,15 @@ function renderPlants() {
   let list = document.getElementById("plantList");
   list.innerHTML = "";
 
-  plantes.forEach(p => {
+  plantes.forEach(name => {
     let li = document.createElement("li");
+
     let cb = document.createElement("input");
     cb.type = "checkbox";
+
     li.appendChild(cb);
-    li.append(" " + p);
+    li.append(" " + name);
+
     list.appendChild(li);
   });
 }
@@ -97,7 +170,7 @@ function renderPlants() {
 renderPlants();
 
 /* =======================
-   CALENDRIER COLLABORATIF (BASE)
+   CALENDRIER COLLABORATIF
 ======================= */
 
 let currentDate = new Date();
@@ -131,11 +204,15 @@ function renderCalendar() {
 
 function addEvent(e,key){
   if(e.key==="Enter"){
+    const text = e.target.value;
+    if (!text) return;
+
     db.collection("calendar").doc(key).collection("events").add({
-      text:e.target.value,
+      text,
       user:auth.currentUser.email,
       created:Date.now()
     });
+
     e.target.value="";
   }
 }
@@ -147,11 +224,26 @@ function listenEvents(key){
   .orderBy("created")
   .onSnapshot(snap=>{
     container.innerHTML="";
-    snap.forEach(d=>{
-      let x=d.data();
-      container.innerHTML+=`<div>${x.user}: ${x.text}</div>`;
+    snap.forEach(doc=>{
+      let d=doc.data();
+
+      container.innerHTML += `
+        <div>
+          <small>${d.user}</small><br>
+          ${d.text}
+          <button onclick="deleteEvent('${key}','${doc.id}')">❌</button>
+        </div>
+      `;
     });
   });
+}
+
+function deleteEvent(key,id){
+  db.collection("calendar")
+    .doc(key)
+    .collection("events")
+    .doc(id)
+    .delete();
 }
 
 function nextMonth(){
