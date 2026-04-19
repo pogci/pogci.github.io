@@ -24,10 +24,28 @@ if (savedTheme) {
    AUTH
 ======================= */
 function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  auth.signInWithEmailAndPassword(email, password).catch(err => alert(err.message));
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!email || !password) {
+    alert("Merci de saisir ton email et ton mot de passe 😊");
+    return;
+  }
+
+  if (!firebase.apps.length || !auth) {
+    alert("Firebase n’est pas initialisé !");
+    console.error("Firebase auth introuvable.");
+    return;
+  }
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => console.log("Connexion réussie"))
+    .catch(err => {
+      console.error(err);
+      alert("Erreur : " + err.message);
+    });
 }
+
 
 auth.onAuthStateChanged(user => {
   if (user) {
