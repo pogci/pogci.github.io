@@ -216,7 +216,7 @@ function renderPlants(){
 }
 
 
-   NAVIGATION
+/*   NAVIGATION
 =========================== */
 function showPage(id){
   document.querySelectorAll(".page").forEach(p=>{
