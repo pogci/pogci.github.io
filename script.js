@@ -224,37 +224,62 @@ function deleteItem(coll,id){
 /* ===========================
    PLANTES
 =========================== */
-const plantes = [
+
+const PLANTES_KEY = "coloc_plantes";
+
+let plantes = JSON.parse(localStorage.getItem(PLANTES_KEY)) || [
   {name:"Barbara", lastWatered:null},
   {name:"Calypso", lastWatered:null},
   {name:"Aretha",  lastWatered:null},
   {name:"Tina",    lastWatered:null},
   {name:"Adèle",   lastWatered:null},
 ];
+
+/* SAVE */
+function savePlants(){
+  localStorage.setItem(PLANTES_KEY, JSON.stringify(plantes));
+}
+
+/* RENDER */
 function renderPlants(){
   const list = document.getElementById("plantList");
+  if(!list) return;
+
   list.innerHTML = "";
+
   plantes.forEach(p=>{
     const li = document.createElement("li");
     li.style.borderLeft = "4px solid #00ff88";
+
     li.innerHTML = `
       <span>
         <strong>${p.name}</strong><br>
-        <small>${p.lastWatered
-          ? "Arrosée le " + new Date(p.lastWatered).toLocaleDateString("fr-FR")
-          : "Jamais arrosée 🌵"}</small>
+        <small>${
+          p.lastWatered
+            ? "Arrosée le " + new Date(p.lastWatered).toLocaleDateString("fr-FR")
+            : "Jamais arrosée 🌵"
+        }</small>
       </span>
       <button onclick="waterPlant('${p.name}')">💧 Arroser</button>
     `;
+
     list.appendChild(li);
   });
 }
+
+/* WATER */
 function waterPlant(name){
-  const plant = plantes.find(p=>p.name===name);
+  const plant = plantes.find(p => p.name === name);
+  if(!plant) return;
+
   plant.lastWatered = Date.now();
-  renderPlants();
+
+  savePlants();      // 🔥 PERSISTENCE
+  renderPlants();    // refresh UI
 }
 
+/* INIT */
+renderPlants();
 /* ===========================
    CALENDRIER PRO
 =========================== */
