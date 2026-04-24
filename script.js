@@ -360,24 +360,53 @@ function initActivities(){
     return;
   }
 
-  const ideas = [
-    "Soirée crêpes 🥞","Randonnée 🌄","Atelier DIY fantasy 🎨",
-    "Soirée spa maison 💅","Session jeu vidéo coop 🎮",
-    "Balade au marché 🌽","Picnic au parc 🧺",
-    "Session photo 📸","Cuisine du monde 🍜",
-    "Dessin de Lumia 🐈","Soirée karaoké 🎤",
-    "Film en plein air 🌙","Blind Test Mission",
-    "Laser Game","Swiiiitch Time","Puzzle"
+const ideasByWeather = {
+  Clear: [
+    "Picnic au parc 🧺",
+    "Balade au soleil 🌞",
+    "Terrasse entre copines 🍹",
+    "Randonnée 🌄",
+    "Blind Test Mission"
+  ],
+  Rain: [
+    "Film + plaid 🎬",
+    "Spa maison 💅",
+    "Cuisine ensemble 🍜",
+    "Puzzle",
+    "Laser Game",
+    "Swiiiiitch",
+    "Blind Test Mission"
+  ],
+  Clouds: [
+    "Expo ou musée 🖼️",
+    "Brunch cosy ☕",
+    "Session yoga 🧘‍♀️",
+    "Soirée crêpes 🥞",
+    "Blind Test Mission"
+  ],
+  Snow: [
+    "Chocolat chaud ☕",
+    "Film cocooning ❄️",
+    "Puzzle",
+    "Swiiiiitch",
+    "Blind Test Mission"
+  ]
+};
+
+btn.onclick = () => {
+  let ideas = ideasByWeather[currentWeather] || [
+    "Soirée chill ✨",
+    "Jeux 🎮",
+    "Karaoké 🎤"
   ];
 
-  btn.onclick = () => {
-    const idea = ideas[Math.floor(Math.random()*ideas.length)];
-    box.textContent = idea;
+  const idea = ideas[Math.floor(Math.random()*ideas.length)];
+  box.textContent = idea;
 
-    box.classList.remove("fade");
-    void box.offsetWidth;
-    box.classList.add("fade");
-  };
+  box.classList.remove("fade");
+  void box.offsetWidth;
+  box.classList.add("fade");
+};
 
   activitiesInitialized = true;
 }
