@@ -446,9 +446,26 @@ function initUI(){
    AURORA CANVAS
 =========================== */
 let canvas;
+let ctx;
+let w, h;
+let mouse = { x: 0, y: 0 };
+
+const palette = [
+  {h:280, s:100, l:60},
+  {h:320, s:100, l:55},
+  {h:190, s:100, l:55},
+  {h:240, s:100, l:60},
+  {h:20,  s:100, l:55},
+  {h:150, s:100, l:50},
+];
+
+let blobs = [];
+let rays = [];
 
 window.addEventListener("load", () => {
   canvas = document.getElementById("auroraCanvas");
+
+  console.log("canvas =", canvas); // ✅ TEST IMPORTANT
 
   if(!canvas){
     console.log("Canvas introuvable ❌");
@@ -457,105 +474,139 @@ window.addEventListener("load", () => {
 
   startAurora();
 });
-console.log("canvas =", canvas);if(canvas){
-  const ctx = canvas.getContext("2d");
-  let w, h, mouse = {x:0, y:0};
-  const palette = [
-    {h:280, s:100, l:60},
-    {h:320, s:100, l:55},
-    {h:190, s:100, l:55},
-    {h:240, s:100, l:60},
-    {h:20,  s:100, l:55},
-    {h:150, s:100, l:50},
-  ];
-  const blobs = [];
-  const rays  = [];
-  function resize(){
-    w = canvas.width  = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  }
-  window.addEventListener("resize", resize);
+
+function startAurora(){
+  ctx = canvas.getContext("2d");
+
   resize();
-  function createBlob(idx){
-    const c = palette[idx % palette.length];
-    return {
-      x:     Math.random()*w,
-      y:     Math.random()*h,
-      r:     Math.random()*220 + 160,
-      hue:   c.h + (Math.random()*30 - 15),
-      sat:   c.s,
-      lit:   c.l,
-      alpha: 0.55 + Math.random()*0.2,
-      vx:    (Math.random()-.5)*0.35,
-      vy:    (Math.random()-.5)*0.35,
-    };
-  }
-  function createRay(){
-    const c = palette[Math.floor(Math.random()*palette.length)];
-    return {
-      x:     Math.random()*w,
-      y:     Math.random()*h,
-      len:   Math.random()*(w/3) + w/8,
-      angle: Math.random()*Math.PI*2,
-      width: Math.random()*3 + 0.5,
-      hue:   c.h,
-      alpha: 0.2 + Math.random()*0.15,
-    };
-  }
-  for(let i=0; i<6; i++) blobs.push(createBlob(i));
-  for(let i=0; i<8; i++) rays.push(createRay());
+  window.addEventListener("resize", resize);
+
   window.addEventListener("mousemove", e=>{
     mouse.x = e.clientX;
     mouse.y = e.clientY;
   });
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    const isDark = document.body.getAttribute("data-theme") === "dark";
-    ctx.fillStyle = isDark
-      ? "rgba(6,6,17,0.3)"
-      : "rgba(243,244,255,0.25)";
-    ctx.fillRect(0,0,w,h);
-    rays.forEach(r=>{
-      r.x += Math.cos(r.angle)*0.4;
-      r.y += Math.sin(r.angle)*0.4;
-      if(r.x < -r.len || r.x > w+r.len || r.y < -r.len || r.y > h+r.len){
-        r.x = Math.random()*w;
-        r.y = Math.random()*h;
-      }
-      const x2 = r.x + Math.cos(r.angle)*r.len;
-      const y2 = r.y + Math.sin(r.angle)*r.len;
-      const g  = ctx.createLinearGradient(r.x,r.y,x2,y2);
-      g.addColorStop(0,   "transparent");
-      g.addColorStop(0.5, "hsla("+r.hue+",100%,65%,"+r.alpha+")");
-      g.addColorStop(1,   "transparent");
-      ctx.strokeStyle = g;
-      ctx.lineWidth   = r.width;
-      ctx.beginPath();
-      ctx.moveTo(r.x, r.y);
-      ctx.lineTo(x2,  y2);
-      ctx.stroke();
-    });
-    blobs.forEach(b=>{
-      const mx = mouse.x || w/2;
-      const my = mouse.y || h/2;
-      b.x += b.vx + (mx - b.x)*0.00008;
-      b.y += b.vy + (my - b.y)*0.00008;
-      if(b.x < -b.r) b.x = w+b.r;
-      if(b.x > w+b.r) b.x = -b.r;
-      if(b.y < -b.r) b.y = h+b.r;
-      if(b.y > h+b.r) b.y = -b.r;
-      const g = ctx.createRadialGradient(b.x,b.y,0, b.x,b.y,b.r);
-      g.addColorStop(0,   "hsla("+b.hue+","+b.sat+"%,"+b.lit+"%,"+b.alpha+")");
-      g.addColorStop(0.6, "hsla("+b.hue+","+b.sat+"%,"+b.lit+"%,"+(b.alpha*0.4)+")");
-      g.addColorStop(1,   "transparent");
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
-      ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  }
+
+  // init blobs + rays
+  blobs = [];
+  rays = [];
+
+  for(let i=0; i<6; i++) blobs.push(createBlob(i));
+  for(let i=0; i<8; i++) rays.push(createRay());
+
   draw();
+}
+
+/* ===========================
+   RESIZE
+=========================== */
+function resize(){
+  if(!canvas) return;
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+
+/* ===========================
+   BLOBS
+=========================== */
+function createBlob(idx){
+  const c = palette[idx % palette.length];
+
+  return {
+    x: Math.random()*w,
+    y: Math.random()*h,
+    r: Math.random()*220 + 160,
+    hue: c.h + (Math.random()*30 - 15),
+    sat: c.s,
+    lit: c.l,
+    alpha: 0.55 + Math.random()*0.2,
+    vx: (Math.random()-.5)*0.35,
+    vy: (Math.random()-.5)*0.35,
+  };
+}
+
+/* ===========================
+   RAYS
+=========================== */
+function createRay(){
+  const c = palette[Math.floor(Math.random()*palette.length)];
+
+  return {
+    x: Math.random()*w,
+    y: Math.random()*h,
+    len: Math.random()*(w/3) + w/8,
+    angle: Math.random()*Math.PI*2,
+    width: Math.random()*3 + 0.5,
+    hue: c.h,
+    alpha: 0.2 + Math.random()*0.15,
+  };
+}
+
+/* ===========================
+   DRAW LOOP
+=========================== */
+function draw(){
+  ctx.clearRect(0,0,w,h);
+
+  const isDark = document.body.getAttribute("data-theme") === "dark";
+
+  ctx.fillStyle = isDark
+    ? "rgba(6,6,17,0.3)"
+    : "rgba(243,244,255,0.25)";
+
+  ctx.fillRect(0,0,w,h);
+
+  /* RAYS */
+  rays.forEach(r=>{
+    r.x += Math.cos(r.angle)*0.4;
+    r.y += Math.sin(r.angle)*0.4;
+
+    if(r.x < -r.len || r.x > w+r.len || r.y < -r.len || r.y > h+r.len){
+      r.x = Math.random()*w;
+      r.y = Math.random()*h;
+    }
+
+    const x2 = r.x + Math.cos(r.angle)*r.len;
+    const y2 = r.y + Math.sin(r.angle)*r.len;
+
+    const g = ctx.createLinearGradient(r.x,r.y,x2,y2);
+    g.addColorStop(0, "transparent");
+    g.addColorStop(0.5, `hsla(${r.hue},100%,65%,${r.alpha})`);
+    g.addColorStop(1, "transparent");
+
+    ctx.strokeStyle = g;
+    ctx.lineWidth = r.width;
+    ctx.beginPath();
+    ctx.moveTo(r.x,r.y);
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
+  });
+
+  /* BLOBS */
+  blobs.forEach(b=>{
+    const mx = mouse.x || w/2;
+    const my = mouse.y || h/2;
+
+    b.x += b.vx + (mx - b.x)*0.00008;
+    b.y += b.vy + (my - b.y)*0.00008;
+
+    if(b.x < -b.r) b.x = w+b.r;
+    if(b.x > w+b.r) b.x = -b.r;
+    if(b.y < -b.r) b.y = h+b.r;
+    if(b.y > h+b.r) b.y = -b.r;
+
+    const g = ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
+
+    g.addColorStop(0, `hsla(${b.hue},${b.sat}%,${b.lit}%,${b.alpha})`);
+    g.addColorStop(0.6, `hsla(${b.hue},${b.sat}%,${b.lit}%,${b.alpha*0.4})`);
+    g.addColorStop(1, "transparent");
+
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(draw);
 }
 /* ===========================
    PARALLAX
