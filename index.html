@@ -71,46 +71,57 @@
   </div>
 </section>
 
+<!-- COURSES -->
 <section id="courses" class="page" style="display:none;">
   <input id="courseInput">
   <button onclick="addCourse()">Ajouter</button>
   <ul id="courseList"></ul>
 </section>
 
+<!-- AGENDA -->
 <section id="agenda" class="page" style="display:none;">
   <button onclick="prevMonth()">⬅</button>
   <span id="monthLabel"></span>
   <button onclick="nextMonth()">➡</button>
   <div id="calendar"></div>
 </section>
-
+  
+<!-- PLANTES -->
 <section id="plantes" class="page" style="display:none;">
   <ul id="plantList"></ul>
 </section>
-
+  
+<!-- NOTES -->
 <section id="notes" class="page" style="display:none;">
   <textarea id="noteInput"></textarea>
   <button onclick="addNote()">Ajouter</button>
   <ul id="noteList"></ul>
 </section>
-
+  
+<!-- SPORT -->
 <section id="sport" class="page" style="display:none;">
   <input id="sportInput">
   <button onclick="addSport()">Ajouter</button>
   <ul id="sportList"></ul>
 </section>
 
+<!-- ACTIVITÉS -->
 <section id="activites" class="page" style="display:none;">
-  <button id="suggestButton">Inspire-moi</button>
-  <div id="suggestionBox"></div>
+  <h2>🎲 Activités</h2>
+  <p>Besoin d'une idée pour ce soir ?</p>
+  <button id="suggestButton">Inspire-moi ✨</button>
+  <!-- class="suggestion-box" obligatoire ici -->
+  <div id="suggestionBox" class="suggestion-box"></div>
 </section>
-
+  
+<!-- GALERIE -->
 <section id="galerie" class="page" style="display:none;">
   <input type="file" id="photoUpload">
   <p id="uploadStatus"></p>
   <div id="galleryGrid"></div>
 </section>
-
+  
+<!-- ABSENCE -->
 <section id="absence" class="page" style="display:none;">
   <input type="checkbox" id="absentToggle">
   <div id="presenceStatus"></div>
