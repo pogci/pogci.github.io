@@ -11,14 +11,22 @@ document.addEventListener("DOMContentLoaded", () => {
    NAVIGATION
 =========================== */
 function showPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+  document.querySelectorAll(".page").forEach(p=>{
+    p.style.display = "none";
+  });
+
   const target = document.getElementById(id);
+
   if(target){
     target.style.display = "block";
     window.scrollTo({top:0, behavior:"smooth"});
+
+    // 👇 FIX ACTIVITÉS
+    if(id === "activites"){
+      initActivities();
+    }
   }
 }
-
 /* ===========================
    THEME
 =========================== */
