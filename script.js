@@ -309,36 +309,39 @@ function prevMonth(){ currentDate.setMonth(currentDate.getMonth()-1); renderCale
 /* ===========================
    ACTIVITÉS
 =========================== */
+let activitiesInitialized = false;
+
 function initActivities(){
-  setTimeout(() => {
-    const btn = document.getElementById("suggestButton");
-    const box = document.getElementById("suggestionBox");
+  if(activitiesInitialized) return;
 
-    if(!btn || !box){
-      console.log("Activités non trouvées dans le DOM");
-      return;
-    }
+  const btn = document.getElementById("suggestButton");
+  const box = document.getElementById("suggestionBox");
 
-    const ideas = [
-      "Soirée crêpes 🥞","Randonnée 🌄","Atelier DIY fantasy 🎨",
-      "Soirée spa maison 💅","Session jeu vidéo coop 🎮",
-      "Balade au marché 🌽","Picnic au parc 🧺",
-      "Session photo 📸","Cuisine du monde 🍜",
-      "Dessin de Lumia 🐈","Soirée karaoké 🎤",
-      "Film en plein air 🌙","Blind Test Mission",
-      "Laser Game","Swiiiitch Time","Puzzle"
-    ];
+  if(!btn || !box){
+    console.log("Activités non trouvées");
+    return;
+  }
 
-    btn.onclick = () => {
-      const idea = ideas[Math.floor(Math.random()*ideas.length)];
-      box.textContent = idea;
+  const ideas = [
+    "Soirée crêpes 🥞","Randonnée 🌄","Atelier DIY fantasy 🎨",
+    "Soirée spa maison 💅","Session jeu vidéo coop 🎮",
+    "Balade au marché 🌽","Picnic au parc 🧺",
+    "Session photo 📸","Cuisine du monde 🍜",
+    "Dessin de Lumia 🐈","Soirée karaoké 🎤",
+    "Film en plein air 🌙","Blind Test Mission",
+    "Laser Game","Swiiiitch Time","Puzzle"
+  ];
 
-      box.classList.remove("fade");
-      void box.offsetWidth;
-      box.classList.add("fade");
-    };
+  btn.onclick = () => {
+    const idea = ideas[Math.floor(Math.random()*ideas.length)];
+    box.textContent = idea;
 
-  }, 300);
+    box.classList.remove("fade");
+    void box.offsetWidth;
+    box.classList.add("fade");
+  };
+
+  activitiesInitialized = true;
 }
 /* ===========================
    ABSENCE
