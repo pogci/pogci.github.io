@@ -445,7 +445,18 @@ function initUI(){
 /* ===========================
    AURORA CANVAS
 =========================== */
-const canvas = document.getElementById("auroraCanvas");
+let canvas;
+
+window.addEventListener("load", () => {
+  canvas = document.getElementById("auroraCanvas");
+
+  if(!canvas){
+    console.log("Canvas introuvable ❌");
+    return;
+  }
+
+  startAurora();
+});
 console.log("canvas =", canvas);if(canvas){
   const ctx = canvas.getContext("2d");
   let w, h, mouse = {x:0, y:0};
