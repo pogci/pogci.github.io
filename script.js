@@ -118,7 +118,7 @@ function getUserColor(email){
 let currentWeather = null;
 
 function getWeather(){
-  const API_KEY = "TA_CLE_ICI";
+  const API_KEY = "edddddf6ddbc83e949669731a47b7a61";
 
   // Paris par défaut (tu peux rendre dynamique après)
   const city = "Paris";
