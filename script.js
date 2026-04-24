@@ -88,6 +88,7 @@ function initApp(){
   renderDashboard();
   renderCalendar();
   renderPlants();
+   getWeather();
 
   listenList("courses","courseList");
   listenList("notes","noteList");
@@ -110,6 +111,31 @@ function getUserColor(email){
 
   return "#0066ff";
 }
+
+/* ===========================
+   METEO REELLE
+=========================== */
+let currentWeather = null;
+
+function getWeather(){
+  const API_KEY = "TA_CLE_ICI";
+
+  // Paris par défaut (tu peux rendre dynamique après)
+  const city = "Paris";
+
+  fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=fr&appid=${API_KEY}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log("Météo:", data);
+
+      currentWeather = data.weather[0].main; 
+      // ex: Clear, Rain, Clouds
+
+      displayWeather(data);
+    })
+    .catch(err => console.error(err));
+}
+
 
 /* ===========================
    DASHBOARD
@@ -135,6 +161,18 @@ function renderDashboard(){
 
   const name = auth.currentUser.email.split("@")[0];
   document.getElementById("greeting").textContent = `Bonjour ${name} ✨`;
+}
+
+function displayWeather(data){
+  const box = document.getElementById("weatherBox");
+  if(!box) return;
+
+  const temp = Math.round(data.main.temp);
+  const desc = data.weather[0].description;
+
+  box.innerHTML = `
+    🌦️ ${desc} — ${temp}°C à Paris
+  `;
 }
 
 /* ===========================
